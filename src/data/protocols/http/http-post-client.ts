@@ -1,3 +1,3 @@
-export interface HttpPostClient {
+export interface IHttpPostClient {
   post(url: string): Promise<void>;
 }
