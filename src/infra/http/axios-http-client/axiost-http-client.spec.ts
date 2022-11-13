@@ -1,6 +1,6 @@
-import { AxiosHttpClient } from './axiost-http-client';
-import { faker } from '@faker-js/faker';
 import axios from 'axios';
+import { faker } from '@faker-js/faker';
+import { AxiosHttpClient } from './axiost-http-client';
 import { HttpPostParams } from '../../../data/protocols/http';
 
 jest.mock('axios');
