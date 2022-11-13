@@ -1,10 +1,18 @@
-{
-    "extends": "standard-with-typescript",
+{    
+    "settings": {
+      "react": {
+        "version": "detect"
+      }
+    },
+    "plugins": ["react"],
+    "extends": ["standard-with-typescript","plugin:react/recommended"],
     "parserOptions": {
       "project": "./tsconfig.json"
     },
     "rules": {
         "@typescript-eslint/consistent-type-definitions": "off",
-        "@typescript-eslint/strict-boolean-expressions": "off"
+        "@typescript-eslint/strict-boolean-expressions": "off",
+        "react/jsx-users-react": "error",
+        "react/jsx-users-vars": "error"
     }
 }
