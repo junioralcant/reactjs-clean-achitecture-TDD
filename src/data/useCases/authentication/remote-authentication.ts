@@ -1,5 +1,8 @@
+import { InvalidCredentilsError } from '../../../domain/errors/invalid-credentials-erros';
+import { UnexpectedError } from '../../../domain/errors/unexpecterd-erros';
 import { AuthenticationParams } from '../../../domain/useCases/authentication';
 import { IHttpPostClient } from '../../protocols/http/http-post-client';
+import { HttpStatusCode } from '../../protocols/http/http-response';
 
 export class RemoteAuthentication {
   constructor(
@@ -11,9 +14,18 @@ export class RemoteAuthentication {
     email,
     password,
   }: AuthenticationParams): Promise<void> {
-    this.httpPosClient.post({
+    const response = await this.httpPosClient.post({
       url: this.url,
       body: { email, password },
     });
+
+    switch (response.statusCode) {
+      case HttpStatusCode.ok:
+        break;
+      case HttpStatusCode.unathorized:
+        throw new InvalidCredentilsError();
+      default:
+        throw new UnexpectedError();
+    }
   }
 }
