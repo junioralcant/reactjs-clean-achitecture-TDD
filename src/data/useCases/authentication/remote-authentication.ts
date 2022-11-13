@@ -1,12 +1,14 @@
-import { InvalidCredentilsError } from '../../../domain/errors/invalid-credentials-erros';
-import { UnexpectedError } from '../../../domain/errors/unexpecterd-erros';
-import { AccountModel } from '../../../domain/models/account.model';
+import { InvalidCredentilsError } from '../../../domain/errors';
+import { UnexpectedError } from '../../../domain/errors';
+import { AccountModel } from '../../../domain/models';
 import {
   AuthenticationParams,
   IAuthentication,
-} from '../../../domain/useCases/authentication';
-import { IHttpPostClient } from '../../protocols/http/http-post-client';
-import { HttpStatusCode } from '../../protocols/http/http-response';
+} from '../../../domain/useCases';
+import {
+  IHttpPostClient,
+  HttpStatusCode,
+} from '../../protocols/http';
 
 export class RemoteAuthentication implements IAuthentication {
   constructor(

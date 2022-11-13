@@ -1,6 +1,6 @@
-import { AuthenticationParams } from '../useCases/authentication';
+import { AuthenticationParams } from '../useCases';
 import { faker } from '@faker-js/faker';
-import { AccountModel } from '../models/account.model';
+import { AccountModel } from '../models';
 
 export function mockAuthentication(): AuthenticationParams {
   return {
