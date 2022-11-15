@@ -1,7 +1,7 @@
-import { Login } from './presentation/pages/login/login';
+import { Router } from './presentation/router/router';
 import './presentation/styles/global.scss';
 function App() {
-  return <Login />;
+  return <Router />;
 }
 
 export default App;
