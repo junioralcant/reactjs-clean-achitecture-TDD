@@ -6,22 +6,22 @@ import { LoginHeader } from '../../components/login-header/login-header';
 import { CreateContextForm } from '../../contexs/form/form-context';
 import './login-styles.scss';
 
-type StateProps = {
-  isLoding: boolean;
-  errorMessage: string;
-};
-
 export function Login() {
-  const [state] = useState<StateProps>({
+  const [state] = useState({
     isLoding: false,
-    errorMessage: '',
+  });
+
+  const [errorState] = useState({
+    email: 'Campo obrigatório',
+    password: 'Campo obrigatório',
+    main: '',
   });
 
   return (
     <div className="login">
       <LoginHeader />
 
-      <CreateContextForm.Provider value={state}>
+      <CreateContextForm.Provider value={{ state, errorState }}>
         <form className="form">
           <h2>Login</h2>
 
