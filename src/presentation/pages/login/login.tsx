@@ -37,7 +37,12 @@ export function Login() {
             placeholder="Digite sua senha"
           />
 
-          <button className="submit" type="submit">
+          <button
+            data-testid="submit"
+            className="submit"
+            type="submit"
+            disabled
+          >
             Entrar
           </button>
           <span className="link">Criar conta</span>
