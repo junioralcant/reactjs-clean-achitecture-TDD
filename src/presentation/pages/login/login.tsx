@@ -1,27 +1,34 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Footer } from '../../components/footer/footer';
 import { FormStatus } from '../../components/form-status/form-status';
 import { Input } from '../../components/input/input';
 import { LoginHeader } from '../../components/login-header/login-header';
 import { CreateContextForm } from '../../contexs/form/form-context';
+import { IValidation } from '../../protocols/validation';
 import './login-styles.scss';
 
-export function Login() {
-  const [state] = useState({
+type Props = {
+  validation: IValidation;
+};
+
+export function Login({ validation }: Props) {
+  const [state, setState] = useState({
     isLoding: false,
+    email: '',
+    emailError: 'Campo obrigatório',
+    passwordError: 'Campo obrigatório',
+    mainError: '',
   });
 
-  const [errorState] = useState({
-    email: 'Campo obrigatório',
-    password: 'Campo obrigatório',
-    main: '',
-  });
+  useEffect(() => {
+    validation.validate({ email: state.email });
+  }, [state.email]);
 
   return (
     <div className="login">
       <LoginHeader />
 
-      <CreateContextForm.Provider value={{ state, errorState }}>
+      <CreateContextForm.Provider value={{ state, setState }}>
         <form className="form">
           <h2>Login</h2>
 

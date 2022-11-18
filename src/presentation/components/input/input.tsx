@@ -8,8 +8,8 @@ type Props = React.DetailedHTMLProps<
 >;
 
 export function Input(props: Props) {
-  const { errorState } = useContext(CreateContextForm);
-  const error = errorState[`${props.name}`];
+  const { state, setState } = useContext(CreateContextForm);
+  const error = state[`${props.name}Error`];
 
   function getStatus(): string {
     return '🔴';
@@ -19,9 +19,22 @@ export function Input(props: Props) {
     return error;
   }
 
+  function handleChange(
+    event: React.FocusEvent<HTMLInputElement>
+  ): void {
+    setState({
+      ...state,
+      [event.target.name]: event.target.value,
+    });
+  }
+
   return (
     <div className="inputWrap">
-      <input {...props} />
+      <input
+        {...props}
+        data-testid={props.name}
+        onChange={handleChange}
+      />
       <span
         data-testid={`${props.name}-status`}
         title={getTitle()}

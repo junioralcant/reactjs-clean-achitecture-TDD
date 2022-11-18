@@ -9,13 +9,12 @@ type Props = React.DetailedHTMLProps<
 >;
 
 export function FormStatus(props: Props) {
-  const { state, errorState } = useContext(CreateContextForm);
+  const { state } = useContext(CreateContextForm);
+  const { isLoading, mainError } = state;
   return (
     <div data-testid="error-wrap" className="errorWrap">
-      {state.isLoading && <Spinner className="spinner" />}
-      {errorState.main && (
-        <span className="error">{errorState.main}</span>
-      )}
+      {isLoading && <Spinner className="spinner" />}
+      {mainError && <span className="error">{mainError}</span>}
     </div>
   );
 }
