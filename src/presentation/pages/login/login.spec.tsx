@@ -5,32 +5,13 @@ import {
   RenderResult,
 } from '@testing-library/react';
 import { IValidation } from '../../protocols/validation';
+import { ValidationSpy } from '../../test';
 import { Login } from './login';
 
 type SutTypes = {
   sut: RenderResult;
   validationSpy: IValidation;
 };
-
-class ValidationSpy implements IValidation {
-  errorMessage: string = '';
-  fieldName: string = '';
-  fieldValue: string = '';
-
-  validate(fieldName: string, fieldValue: string): string {
-    this.fieldName = fieldName;
-    this.fieldValue = fieldValue;
-    return this.errorMessage;
-  }
-
-  getFieldName(): string {
-    return this.fieldName;
-  }
-
-  getFieldValue(): string {
-    return this.fieldValue;
-  }
-}
 
 function makeSut(): SutTypes {
   const validationSpy = new ValidationSpy();
