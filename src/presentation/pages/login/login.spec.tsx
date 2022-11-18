@@ -14,15 +14,21 @@ type SutTypes = {
 
 class ValidationSpy implements IValidation {
   errorMessage: string = '';
-  public input: object = {};
+  fieldName: string = '';
+  fieldValue: string = '';
 
-  validate(input: object): string {
-    this.input = input;
+  validate(fieldName: string, fieldValue: string): string {
+    this.fieldName = fieldName;
+    this.fieldValue = fieldValue;
     return this.errorMessage;
   }
 
-  getInput(): object {
-    return this.input;
+  getFieldName(): string {
+    return this.fieldName;
+  }
+
+  getFieldValue(): string {
+    return this.fieldValue;
   }
 }
 
@@ -60,9 +66,8 @@ describe('Login Component', () => {
     const { sut, validationSpy } = makeSut();
     const emailInput = sut.getByTestId('email');
     fireEvent.input(emailInput, { target: { value: 'any_email' } });
-    expect(validationSpy.getInput()).toEqual({
-      email: 'any_email',
-    });
+    expect(validationSpy.getFieldName()).toBe('email');
+    expect(validationSpy.getFieldValue()).toBe('any_email');
   });
 
   it('Should call Validation with correct value password', () => {
@@ -71,8 +76,7 @@ describe('Login Component', () => {
     fireEvent.input(passwordInput, {
       target: { value: 'any_password' },
     });
-    expect(validationSpy.getInput()).toEqual({
-      password: 'any_password',
-    });
+    expect(validationSpy.getFieldName()).toBe('password');
+    expect(validationSpy.getFieldValue()).toBe('any_password');
   });
 });

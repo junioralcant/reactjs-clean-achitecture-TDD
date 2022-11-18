@@ -1,4 +1,5 @@
 export interface IValidation {
-  validate(input: object): string;
-  getInput(): object;
+  validate(fieldName: string, fieldValue: string): string;
+  getFieldName(): string;
+  getFieldValue(): string;
 }
