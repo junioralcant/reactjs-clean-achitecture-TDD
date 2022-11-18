@@ -18,4 +18,13 @@ export class ValidationSpy implements IValidation {
   getFieldValue(): string {
     return this.fieldValue;
   }
+
+  getMessageError(): string {
+    return this.errorMessage;
+  }
+
+  setMessageError(message: string): string {
+    this.errorMessage = message;
+    return this.errorMessage;
+  }
 }
