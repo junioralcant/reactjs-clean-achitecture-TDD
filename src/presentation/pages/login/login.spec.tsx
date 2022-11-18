@@ -4,6 +4,7 @@ import {
   render,
   RenderResult,
 } from '@testing-library/react';
+import { faker } from '@faker-js/faker';
 import { IValidation } from '../../protocols/validation';
 import { ValidationSpy } from '../../test';
 import { Login } from './login';
@@ -46,18 +47,20 @@ describe('Login Component', () => {
   it('Should call Validation with correct value email', () => {
     const { sut, validationSpy } = makeSut();
     const emailInput = sut.getByTestId('email');
-    fireEvent.input(emailInput, { target: { value: 'any_email' } });
+    const email = faker.internet.email();
+    fireEvent.input(emailInput, { target: { value: email } });
     expect(validationSpy.getFieldName()).toBe('email');
-    expect(validationSpy.getFieldValue()).toBe('any_email');
+    expect(validationSpy.getFieldValue()).toBe(email);
   });
 
   it('Should call Validation with correct value password', () => {
     const { sut, validationSpy } = makeSut();
     const passwordInput = sut.getByTestId('password');
+    const password = faker.internet.password();
     fireEvent.input(passwordInput, {
-      target: { value: 'any_password' },
+      target: { value: password },
     });
     expect(validationSpy.getFieldName()).toBe('password');
-    expect(validationSpy.getFieldValue()).toBe('any_password');
+    expect(validationSpy.getFieldValue()).toBe(password);
   });
 });
