@@ -12,11 +12,11 @@ export function Input(props: Props) {
   const error = state[`${props.name}Error`];
 
   function getStatus(): string {
-    return '🔴';
+    return error ? '🔴' : '🟢';
   }
 
   function getTitle(): string {
-    return error;
+    return error || 'Tudo ok!';
   }
 
   function handleChange(
