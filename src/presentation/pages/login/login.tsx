@@ -15,6 +15,7 @@ export function Login({ validation }: Props) {
   const [state, setState] = useState({
     isLoding: false,
     email: '',
+    password: '',
     emailError: 'Campo obrigatório',
     passwordError: 'Campo obrigatório',
     mainError: '',
@@ -23,6 +24,10 @@ export function Login({ validation }: Props) {
   useEffect(() => {
     validation.validate({ email: state.email });
   }, [state.email]);
+
+  useEffect(() => {
+    validation.validate({ password: state.password });
+  }, [state.password]);
 
   return (
     <div className="login">
