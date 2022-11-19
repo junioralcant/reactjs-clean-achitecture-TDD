@@ -123,4 +123,22 @@ describe('Login Component', () => {
 
     expect(submitButton.disabled).toBe(false);
   });
+
+  it('Should show spinner on submit', () => {
+    const { sut } = makeSut();
+
+    const emailInput = sut.getByTestId('email');
+    const email = faker.internet.email();
+    fireEvent.input(emailInput, { target: { value: email } });
+
+    const passwordInput = sut.getByTestId('password');
+    const password = faker.internet.password();
+    fireEvent.input(passwordInput, { target: { value: password } });
+
+    const submitButton = sut.getByTestId('submit');
+    fireEvent.click(submitButton);
+
+    const spinner = sut.container.getElementsByClassName('spinner');
+    expect(spinner).toBeTruthy();
+  });
 });
