@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Footer } from '../../components/footer/footer';
 import { FormStatus } from '../../components/form-status/form-status';
 import { Input } from '../../components/input/input';
@@ -29,12 +29,20 @@ export function Login({ validation }: Props) {
     });
   }, [state.email, state.password]);
 
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setState({
+      ...state,
+      isLoding: true,
+    });
+  }
+
   return (
     <div className="login">
       <LoginHeader />
 
       <CreateContextForm.Provider value={{ state, setState }}>
-        <form className="form">
+        <form className="form" onSubmit={handleSubmit}>
           <h2>Login</h2>
 
           <Input
