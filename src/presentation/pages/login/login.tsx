@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { IAuthentication } from '../../../domain/useCases';
 import { Footer } from '../../components/footer/footer';
 import { FormStatus } from '../../components/form-status/form-status';
 import { Input } from '../../components/input/input';
@@ -9,9 +10,10 @@ import './login-styles.scss';
 
 type Props = {
   validation: IValidation;
+  authentication: IAuthentication;
 };
 
-export function Login({ validation }: Props) {
+export function Login({ validation, authentication }: Props) {
   const [state, setState] = useState({
     isLoding: false,
     email: '',
@@ -29,11 +31,18 @@ export function Login({ validation }: Props) {
     });
   }, [state.email, state.password]);
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(
+    event: React.FormEvent<HTMLFormElement>
+  ): Promise<void> {
     event.preventDefault();
     setState({
       ...state,
       isLoding: true,
+    });
+
+    await authentication.auth({
+      email: state.email,
+      password: state.password,
     });
   }
 
