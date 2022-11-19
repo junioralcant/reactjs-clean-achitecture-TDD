@@ -53,7 +53,7 @@ export function Login({ validation }: Props) {
             data-testid="submit"
             className="submit"
             type="submit"
-            disabled
+            disabled={!!state.emailError || !!state.passwordError}
           >
             Entrar
           </button>
