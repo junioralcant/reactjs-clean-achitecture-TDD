@@ -5,12 +5,31 @@ import {
   RenderResult,
 } from '@testing-library/react';
 import { faker } from '@faker-js/faker';
-import { IValidation } from '../../protocols/validation';
 import { ValidationStub } from '../../test';
 import { Login } from './login';
+import {
+  AuthenticationParams,
+  IAuthentication,
+} from '../../../domain/useCases';
+import { AccountModel } from '../../../domain/models';
+import { mockAccountModel } from '../../../domain/test';
+
+class AuthenticationSpy implements IAuthentication {
+  account = mockAccountModel();
+  params: AuthenticationParams = {
+    email: '',
+    password: '',
+  };
+
+  async auth(params: AuthenticationParams): Promise<AccountModel> {
+    this.params = params;
+    return this.account;
+  }
+}
 
 type SutTypes = {
   sut: RenderResult;
+  authenticationSpy: AuthenticationSpy;
 };
 
 type SutParams = {
@@ -19,13 +38,20 @@ type SutParams = {
 
 function makeSut(params?: SutParams): SutTypes {
   const validationStub = new ValidationStub();
+  const authenticationSpy = new AuthenticationSpy();
 
   validationStub.setMessageError(params?.validationError as string);
 
-  const sut = render(<Login validation={validationStub} />);
+  const sut = render(
+    <Login
+      validation={validationStub}
+      authentication={authenticationSpy}
+    />
+  );
 
   return {
     sut,
+    authenticationSpy,
   };
 }
 
@@ -140,5 +166,25 @@ describe('Login Component', () => {
 
     const spinner = sut.container.getElementsByClassName('spinner');
     expect(spinner).toBeTruthy();
+  });
+
+  it('Should call Authentication with correct values', () => {
+    const { sut, authenticationSpy } = makeSut();
+
+    const emailInput = sut.getByTestId('email');
+    const email = faker.internet.email();
+    fireEvent.input(emailInput, { target: { value: email } });
+
+    const passwordInput = sut.getByTestId('password');
+    const password = faker.internet.password();
+    fireEvent.input(passwordInput, { target: { value: password } });
+
+    const submitButton = sut.getByTestId('submit');
+    fireEvent.click(submitButton);
+
+    expect(authenticationSpy.params).toEqual({
+      email,
+      password,
+    });
   });
 });
