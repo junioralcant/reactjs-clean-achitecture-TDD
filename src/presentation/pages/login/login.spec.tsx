@@ -246,6 +246,8 @@ describe('Login Component', () => {
         authenticationSpy.account.accessToken
       );
     });
+
+    expect(mockedUsedNavigate).toHaveBeenCalledWith('/');
   });
 
   it('Should go to signup page', async () => {
