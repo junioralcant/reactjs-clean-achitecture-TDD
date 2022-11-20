@@ -7,25 +7,7 @@ import {
 import { faker } from '@faker-js/faker';
 import { ValidationStub } from '../../test';
 import { Login } from './login';
-import {
-  AuthenticationParams,
-  IAuthentication,
-} from '../../../domain/useCases';
-import { AccountModel } from '../../../domain/models';
-import { mockAccountModel } from '../../../domain/test';
-
-class AuthenticationSpy implements IAuthentication {
-  account = mockAccountModel();
-  params: AuthenticationParams = {
-    email: '',
-    password: '',
-  };
-
-  async auth(params: AuthenticationParams): Promise<AccountModel> {
-    this.params = params;
-    return this.account;
-  }
-}
+import { AuthenticationSpy } from '../../test';
 
 type SutTypes = {
   sut: RenderResult;
