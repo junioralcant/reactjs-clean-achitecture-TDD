@@ -58,6 +58,8 @@ export function Login({ validation, authentication }: Props) {
         'accessToken',
         response?.accessToken as string
       );
+
+      navigate('/');
     } catch (error: any) {
       setState({
         ...state,
