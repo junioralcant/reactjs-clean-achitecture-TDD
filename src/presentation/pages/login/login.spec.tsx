@@ -177,4 +177,14 @@ describe('Login Component', () => {
 
     expect(authenticationSpy.getCallsCount()).toBe(1);
   });
+
+  it('Should call Authentication if form is invalid', () => {
+    const validationError = faker.internet.domainWord();
+    const { sut, authenticationSpy } = makeSut({ validationError });
+
+    populateEmailField(sut);
+    fireEvent.submit(sut.getByTestId('form'));
+
+    expect(authenticationSpy.getCallsCount()).toBe(0);
+  });
 });
