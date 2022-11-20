@@ -12,8 +12,15 @@ export class AuthenticationSpy implements IAuthentication {
     password: '',
   };
 
+  callsCount = 0;
+
   async auth(params: AuthenticationParams): Promise<AccountModel> {
     this.params = params;
+    this.callsCount++;
     return this.account;
+  }
+
+  getCallsCount(): number {
+    return this.callsCount;
   }
 }
