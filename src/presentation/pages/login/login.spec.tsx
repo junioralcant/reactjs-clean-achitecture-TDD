@@ -11,6 +11,7 @@ import { ValidationStub } from '../../test';
 import { Login } from './login';
 import { AuthenticationSpy } from '../../test';
 import { InvalidCredentilsError } from '../../../domain/errors';
+import { BrowserRouter } from 'react-router-dom';
 
 type SutTypes = {
   sut: RenderResult;
@@ -28,10 +29,12 @@ function makeSut(params?: SutParams): SutTypes {
   validationStub.setMessageError(params?.validationError as string);
 
   const sut = render(
-    <Login
-      validation={validationStub}
-      authentication={authenticationSpy}
-    />
+    <BrowserRouter>
+      <Login
+        validation={validationStub}
+        authentication={authenticationSpy}
+      />
+    </BrowserRouter>
   );
 
   return {
@@ -39,6 +42,12 @@ function makeSut(params?: SutParams): SutTypes {
     authenticationSpy,
   };
 }
+
+const mockedUsedNavigate = jest.fn();
+jest.mock('react-router-dom', () => ({
+  ...(jest.requireActual('react-router-dom') as any),
+  useNavigate: () => mockedUsedNavigate,
+}));
 
 function simulateValidSubmit(
   sut: RenderResult,
@@ -224,5 +233,25 @@ describe('Login Component', () => {
         authenticationSpy.account.accessToken
       );
     });
+  });
+
+  it('Should add accessToken to localstorage on success', async () => {
+    const { sut, authenticationSpy } = makeSut();
+
+    simulateValidSubmit(sut);
+
+    await waitFor(() => {
+      expect(localStorage.setItem).toHaveBeenCalledWith(
+        'accessToken',
+        authenticationSpy.account.accessToken
+      );
+    });
+  });
+
+  it('Should go to signup page', async () => {
+    const { sut } = makeSut();
+    const signupButton = sut.getByTestId('signup');
+    fireEvent.click(signupButton);
+    expect(mockedUsedNavigate).toHaveBeenCalledWith('/signup');
   });
 });
