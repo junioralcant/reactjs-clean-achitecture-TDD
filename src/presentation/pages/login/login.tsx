@@ -36,19 +36,27 @@ export function Login({ validation, authentication }: Props) {
   ): Promise<void> {
     event.preventDefault();
 
-    if (state.isLoding || state.emailError || state.passwordError) {
-      return;
+    try {
+      if (state.isLoding || state.emailError || state.passwordError) {
+        return;
+      }
+
+      setState({
+        ...state,
+        isLoding: true,
+      });
+
+      await authentication.auth({
+        email: state.email,
+        password: state.password,
+      });
+    } catch (error: any) {
+      setState({
+        ...state,
+        isLoding: false,
+        mainError: error.message,
+      });
     }
-
-    setState({
-      ...state,
-      isLoding: true,
-    });
-
-    await authentication.auth({
-      email: state.email,
-      password: state.password,
-    });
   }
 
   return (
