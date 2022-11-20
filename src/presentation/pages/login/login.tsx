@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { IAuthentication } from '../../../domain/useCases';
 import { Footer } from '../../components/footer/footer';
 import { FormStatus } from '../../components/form-status/form-status';
@@ -22,6 +23,8 @@ export function Login({ validation, authentication }: Props) {
     passwordError: '',
     mainError: '',
   });
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     setState({
@@ -96,7 +99,13 @@ export function Login({ validation, authentication }: Props) {
           >
             Entrar
           </button>
-          <span className="link">Criar conta</span>
+          <span
+            onClick={() => navigate('/signup')}
+            data-testid="signup"
+            className="link"
+          >
+            Criar conta
+          </span>
           <FormStatus />
         </form>
       </CreateContextForm.Provider>
