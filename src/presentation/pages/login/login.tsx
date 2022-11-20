@@ -46,10 +46,15 @@ export function Login({ validation, authentication }: Props) {
         isLoding: true,
       });
 
-      await authentication.auth({
+      const response = await authentication.auth({
         email: state.email,
         password: state.password,
       });
+
+      localStorage.setItem(
+        'accessToken',
+        response?.accessToken as string
+      );
     } catch (error: any) {
       setState({
         ...state,
