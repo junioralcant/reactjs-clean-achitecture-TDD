@@ -6,6 +6,7 @@ import {
   waitFor,
 } from '@testing-library/react';
 import { faker } from '@faker-js/faker';
+import 'jest-localstorage-mock';
 import { ValidationStub } from '../../test';
 import { Login } from './login';
 import { AuthenticationSpy } from '../../test';
@@ -69,6 +70,9 @@ function populatePasswordField(
 
 describe('Login Component', () => {
   afterEach(cleanup);
+  beforeEach(() => {
+    localStorage.clear();
+  });
 
   it('Should start with intial state', () => {
     const validationError = faker.internet.domainWord();
@@ -207,5 +211,18 @@ describe('Login Component', () => {
 
     const errorWrap = sut.getByTestId('error-wrap');
     expect(errorWrap.childElementCount).toBe(1);
+  });
+
+  it('Should add accessToken to localstorage on success', async () => {
+    const { sut, authenticationSpy } = makeSut();
+
+    simulateValidSubmit(sut);
+
+    await waitFor(() => {
+      expect(localStorage.setItem).toHaveBeenCalledWith(
+        'accessToken',
+        authenticationSpy.account.accessToken
+      );
+    });
   });
 });
