@@ -35,6 +35,11 @@ export function Login({ validation, authentication }: Props) {
     event: React.FormEvent<HTMLFormElement>
   ): Promise<void> {
     event.preventDefault();
+
+    if (state.isLoding) {
+      return;
+    }
+
     setState({
       ...state,
       isLoding: true,
