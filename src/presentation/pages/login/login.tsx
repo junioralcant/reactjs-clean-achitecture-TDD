@@ -36,7 +36,7 @@ export function Login({ validation, authentication }: Props) {
   ): Promise<void> {
     event.preventDefault();
 
-    if (state.isLoding) {
+    if (state.isLoding || state.emailError || state.passwordError) {
       return;
     }
 
@@ -56,7 +56,11 @@ export function Login({ validation, authentication }: Props) {
       <LoginHeader />
 
       <CreateContextForm.Provider value={{ state, setState }}>
-        <form className="form" onSubmit={handleSubmit}>
+        <form
+          data-testid="form"
+          className="form"
+          onSubmit={handleSubmit}
+        >
           <h2>Login</h2>
 
           <Input
