@@ -5,6 +5,8 @@ export class MinLengthValidation implements IFielValidation {
   constructor(readonly field: string, readonly minLength: number) {}
 
   validate(value: string): Error | null {
-    return new InvalidFieldError();
+    return value.length >= this.minLength
+      ? null
+      : new InvalidFieldError();
   }
 }
