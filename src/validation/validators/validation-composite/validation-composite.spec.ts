@@ -1,3 +1,4 @@
+import {faker} from '@faker-js/faker';
 import {FieldValidationSpy} from '../test/mack-field-validation';
 import {ValidationComposite} from './validation-composite';
 
@@ -6,10 +7,10 @@ type SutTypes = {
   fieldValidationSpy: FieldValidationSpy[];
 };
 
-function makeSut(): SutTypes {
+function makeSut(fieldName: string): SutTypes {
   const fieldValidationSpy = [
-    new FieldValidationSpy('any_field'),
-    new FieldValidationSpy('any_field'),
+    new FieldValidationSpy(fieldName),
+    new FieldValidationSpy(fieldName),
   ];
 
   const sut = new ValidationComposite(fieldValidationSpy);
@@ -21,12 +22,23 @@ function makeSut(): SutTypes {
 
 describe('ValidationComposite', () => {
   it('Should return error if any validation falsy', () => {
-    const {sut, fieldValidationSpy} = makeSut();
+    const fieldName = faker.database.column();
+    const {sut, fieldValidationSpy} = makeSut(fieldName);
 
-    fieldValidationSpy[0].error = new Error('first_error_message');
-    fieldValidationSpy[1].error = new Error('second_error_message');
+    const error1 = faker.random.words();
+    const error2 = faker.random.words();
 
-    const error = sut.validate('any_field', 'any_value');
-    expect(error).toBe('first_error_message');
+    fieldValidationSpy[0].error = new Error(error1);
+    fieldValidationSpy[1].error = new Error(error2);
+
+    const error = sut.validate(fieldName, faker.random.words());
+    expect(error).toBe(error1);
+  });
+
+  it('Should return falsy if there is no error', () => {
+    const fieldName = faker.database.column();
+    const {sut} = makeSut(fieldName);
+    const error = sut.validate('any_field', faker.random.words());
+    expect(error).toBeFalsy();
   });
 });
