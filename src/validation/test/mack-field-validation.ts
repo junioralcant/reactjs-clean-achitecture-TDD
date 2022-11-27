@@ -1,4 +1,4 @@
-import {IFielValidation} from '../../protocols/field-validation';
+import {IFielValidation} from '../protocols/field-validation';
 
 export class FieldValidationSpy implements IFielValidation {
   error: Error | null = null;
