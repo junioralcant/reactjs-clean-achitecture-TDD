@@ -22,12 +22,4 @@ export class ValidationComposite implements IValidation {
 
     return '';
   }
-
-  getMessageError(): string {
-    throw new Error('Method not implemented.');
-  }
-
-  setMessageError(message: string): string {
-    throw new Error('Method not implemented.');
-  }
 }
