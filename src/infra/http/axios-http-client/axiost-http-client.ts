@@ -3,14 +3,21 @@ import {
   HttpReponse,
   IHttpPostClient,
 } from '../../../data/protocols/http';
-import axios from 'axios';
+import axios, {AxiosResponse} from 'axios';
 
 export class AxiosHttpClient implements IHttpPostClient<any, any> {
   async post({
     url,
     body,
   }: HttpPostParams<any>): Promise<HttpReponse<any>> {
-    const respose = await axios.post(url, body);
+    let respose: AxiosResponse<any>;
+
+    try {
+      respose = await axios.post(url, body);
+    } catch (error: any) {
+      respose = error.response;
+    }
+
     return {
       statusCode: respose.status,
       body: respose.data,

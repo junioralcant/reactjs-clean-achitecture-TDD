@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { AxiosHttpClient } from './axiost-http-client';
-import { mockAxios } from '../test';
-import { mockPostReqest } from '../../../data/test';
+import {AxiosHttpClient} from './axiost-http-client';
+import {mockAxios, mockHttpResponse} from '../test';
+import {mockPostReqest} from '../../../data/test';
 
 jest.mock('axios');
 
@@ -23,7 +23,7 @@ const makeSut = (): SutTypes => {
 describe('AxiosHttpClient', () => {
   it('Should call axios with correct URL verb', async () => {
     const request = mockPostReqest();
-    const { sut, mockedAxios } = makeSut();
+    const {sut, mockedAxios} = makeSut();
     await sut.post(request);
     expect(mockedAxios.post).toHaveBeenCalledWith(
       request.url,
@@ -33,8 +33,18 @@ describe('AxiosHttpClient', () => {
 
   it('Should return the correct statusCode and body', () => {
     const request = mockPostReqest();
-    const { sut, mockedAxios } = makeSut();
-    const resposne = sut.post(request);
-    expect(resposne).toEqual(mockedAxios.post.mock.results[0].value);
+    const {sut, mockedAxios} = makeSut();
+    const response = sut.post(request);
+    expect(response).toEqual(mockedAxios.post.mock.results[0].value);
+  });
+
+  it('Should return the correct statusCode and body on failure', () => {
+    const request = mockPostReqest();
+    const {sut, mockedAxios} = makeSut();
+    mockedAxios.post.mockRejectedValueOnce({
+      response: mockHttpResponse(),
+    });
+    const response = sut.post(request);
+    expect(response).toEqual(mockedAxios.post.mock.results[0].value);
   });
 });
