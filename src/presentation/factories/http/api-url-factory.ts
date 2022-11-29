@@ -1,3 +1,3 @@
 export function makeApiUrl(path: string): string {
-  return `http://fordevs.herokuapp.com/api${path}`;
+  return `${import.meta.env.VITE_API_URL}${path}`;
 }
