@@ -5,13 +5,13 @@ import {
   RenderResult,
   waitFor,
 } from '@testing-library/react';
-import { faker } from '@faker-js/faker';
+import {faker} from '@faker-js/faker';
 import 'jest-localstorage-mock';
-import { ValidationStub } from '../../test';
-import { Login } from './login';
-import { AuthenticationSpy } from '../../test';
-import { InvalidCredentilsError } from '../../../domain/errors';
-import { BrowserRouter } from 'react-router-dom';
+import {ValidationStub} from '../../test';
+import {Login} from './login';
+import {AuthenticationSpy} from '../../test';
+import {InvalidCredentilsError} from '../../../domain/errors';
+import {BrowserRouter} from 'react-router-dom';
 
 type SutTypes = {
   sut: RenderResult;
@@ -66,7 +66,7 @@ function populateEmailField(
   email = faker.internet.email()
 ): void {
   const emailInput = sut.getByTestId('email');
-  fireEvent.input(emailInput, { target: { value: email } });
+  fireEvent.input(emailInput, {target: {value: email}});
 }
 
 function populatePasswordField(
@@ -74,7 +74,7 @@ function populatePasswordField(
   password = faker.internet.password()
 ): void {
   const passwordInput = sut.getByTestId('password');
-  fireEvent.input(passwordInput, { target: { value: password } });
+  fireEvent.input(passwordInput, {target: {value: password}});
 }
 
 describe('Login Component', () => {
@@ -86,7 +86,7 @@ describe('Login Component', () => {
   it('Should start with intial state', () => {
     const validationError = faker.internet.domainWord();
 
-    const { sut } = makeSut({ validationError });
+    const {sut} = makeSut({validationError});
 
     const errorWrap = sut.getByTestId('error-wrap');
     expect(errorWrap.childElementCount).toBe(0);
@@ -107,7 +107,7 @@ describe('Login Component', () => {
 
   it('Should show email error if Validation fails', () => {
     const validationError = faker.internet.domainWord();
-    const { sut } = makeSut({ validationError });
+    const {sut} = makeSut({validationError});
 
     populateEmailField(sut);
 
@@ -118,7 +118,7 @@ describe('Login Component', () => {
 
   it('Should show password error if Validation fails', () => {
     const validationError = faker.internet.domainWord();
-    const { sut } = makeSut({ validationError });
+    const {sut} = makeSut({validationError});
 
     populatePasswordField(sut);
 
@@ -128,7 +128,7 @@ describe('Login Component', () => {
   });
 
   it('Should show valid email state if validation succeeds', () => {
-    const { sut } = makeSut();
+    const {sut} = makeSut();
 
     populateEmailField(sut);
 
@@ -138,7 +138,7 @@ describe('Login Component', () => {
   });
 
   it('Should show valid password state if validation succeeds', () => {
-    const { sut } = makeSut();
+    const {sut} = makeSut();
 
     populatePasswordField(sut);
 
@@ -148,7 +148,7 @@ describe('Login Component', () => {
   });
 
   it('Should enble submit button if form is valid', () => {
-    const { sut } = makeSut();
+    const {sut} = makeSut();
 
     populateEmailField(sut);
     populatePasswordField(sut);
@@ -161,16 +161,16 @@ describe('Login Component', () => {
   });
 
   it('Should show spinner on submit', () => {
-    const { sut } = makeSut();
+    const {sut} = makeSut();
 
     simulateValidSubmit(sut);
 
-    const spinner = sut.container.getElementsByClassName('spinner');
+    const spinner = sut.getByTestId('spinner');
     expect(spinner).toBeTruthy();
   });
 
   it('Should call Authentication with correct values', () => {
-    const { sut, authenticationSpy } = makeSut();
+    const {sut, authenticationSpy} = makeSut();
 
     const email = faker.internet.email();
 
@@ -185,7 +185,7 @@ describe('Login Component', () => {
   });
 
   it('Should call Authentication only once', () => {
-    const { sut, authenticationSpy } = makeSut();
+    const {sut, authenticationSpy} = makeSut();
 
     simulateValidSubmit(sut);
     simulateValidSubmit(sut);
@@ -195,7 +195,7 @@ describe('Login Component', () => {
 
   it('Should call Authentication if form is invalid', () => {
     const validationError = faker.internet.domainWord();
-    const { sut, authenticationSpy } = makeSut({ validationError });
+    const {sut, authenticationSpy} = makeSut({validationError});
 
     populateEmailField(sut);
     fireEvent.submit(sut.getByTestId('form'));
@@ -204,7 +204,7 @@ describe('Login Component', () => {
   });
 
   it('Should present error if Authentication fails', async () => {
-    const { sut, authenticationSpy } = makeSut();
+    const {sut, authenticationSpy} = makeSut();
     const error = new InvalidCredentilsError();
 
     jest
@@ -223,7 +223,7 @@ describe('Login Component', () => {
   });
 
   it('Should add accessToken to localstorage on success', async () => {
-    const { sut, authenticationSpy } = makeSut();
+    const {sut, authenticationSpy} = makeSut();
 
     simulateValidSubmit(sut);
 
@@ -236,7 +236,7 @@ describe('Login Component', () => {
   });
 
   it('Should add accessToken to localstorage on success', async () => {
-    const { sut, authenticationSpy } = makeSut();
+    const {sut, authenticationSpy} = makeSut();
 
     simulateValidSubmit(sut);
 
@@ -251,7 +251,7 @@ describe('Login Component', () => {
   });
 
   it('Should go to signup page', async () => {
-    const { sut } = makeSut();
+    const {sut} = makeSut();
     const signupButton = sut.getByTestId('signup');
     fireEvent.click(signupButton);
     expect(mockedUsedNavigate).toHaveBeenCalledWith('/signup');
