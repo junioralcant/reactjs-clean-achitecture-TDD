@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { IAuthentication } from '../../../domain/useCases';
-import { Footer } from '../../components/footer/footer';
-import { FormStatus } from '../../components/form-status/form-status';
-import { Input } from '../../components/input/input';
-import { LoginHeader } from '../../components/login-header/login-header';
-import { CreateContextForm } from '../../contexs/form/form-context';
-import { IValidation } from '../../protocols/validation';
+import React, {useEffect, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {IAuthentication} from '../../../domain/useCases';
+import {Footer} from '../../components/footer/footer';
+import {FormStatus} from '../../components/form-status/form-status';
+import {Input} from '../../components/input/input';
+import {LoginHeader} from '../../components/login-header/login-header';
+import {CreateContextForm} from '../../contexs/form/form-context';
+import {IValidation} from '../../protocols/validation';
 import './login-styles.scss';
 
 type Props = {
@@ -14,9 +14,9 @@ type Props = {
   authentication: IAuthentication;
 };
 
-export function Login({ validation, authentication }: Props) {
+export function Login({validation, authentication}: Props) {
   const [state, setState] = useState({
-    isLoding: false,
+    isLoading: false,
     email: '',
     password: '',
     emailError: '',
@@ -40,13 +40,17 @@ export function Login({ validation, authentication }: Props) {
     event.preventDefault();
 
     try {
-      if (state.isLoding || state.emailError || state.passwordError) {
+      if (
+        state.isLoading ||
+        state.emailError ||
+        state.passwordError
+      ) {
         return;
       }
 
       setState({
         ...state,
-        isLoding: true,
+        isLoading: true,
       });
 
       const response = await authentication.auth({
@@ -63,7 +67,7 @@ export function Login({ validation, authentication }: Props) {
     } catch (error: any) {
       setState({
         ...state,
-        isLoding: false,
+        isLoading: false,
         mainError: error.message,
       });
     }
@@ -73,7 +77,7 @@ export function Login({ validation, authentication }: Props) {
     <div className="login">
       <LoginHeader />
 
-      <CreateContextForm.Provider value={{ state, setState }}>
+      <CreateContextForm.Provider value={{state, setState}}>
         <form
           data-testid="form"
           className="form"
