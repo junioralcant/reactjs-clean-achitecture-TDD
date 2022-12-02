@@ -1,6 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {IAuthentication} from '../../../domain/useCases';
+import {
+  IAuthentication,
+  ISaveAccessToken,
+} from '../../../domain/useCases';
 import {Footer} from '../../components/footer/footer';
 import {FormStatus} from '../../components/form-status/form-status';
 import {Input} from '../../components/input/input';
@@ -12,9 +15,14 @@ import './login-styles.scss';
 type Props = {
   validation: IValidation;
   authentication: IAuthentication;
+  saveAccessToken: ISaveAccessToken;
 };
 
-export function Login({validation, authentication}: Props) {
+export function Login({
+  validation,
+  authentication,
+  saveAccessToken,
+}: Props) {
   const [state, setState] = useState({
     isLoading: false,
     email: '',
@@ -58,6 +66,7 @@ export function Login({validation, authentication}: Props) {
         password: state.password,
       });
 
+      await saveAccessToken.save(response?.accessToken);
       localStorage.setItem(
         'accessToken',
         response?.accessToken as string
