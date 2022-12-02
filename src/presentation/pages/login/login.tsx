@@ -67,11 +67,6 @@ export function Login({
       });
 
       await saveAccessToken.save(response?.accessToken);
-      localStorage.setItem(
-        'accessToken',
-        response?.accessToken as string
-      );
-
       navigate('/');
     } catch (error: any) {
       setState({
