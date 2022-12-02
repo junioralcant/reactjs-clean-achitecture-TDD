@@ -238,6 +238,25 @@ describe('Login Component', () => {
     expect(mockedUsedNavigate).toHaveBeenCalledWith('/');
   });
 
+  it('Should present error if SaveAccessToken fails', async () => {
+    const {sut, saveAccessTokenMock} = makeSut();
+    const error = new InvalidCredentilsError();
+
+    jest
+      .spyOn(saveAccessTokenMock, 'save')
+      .mockRejectedValueOnce(error);
+
+    simulateValidSubmit(sut);
+
+    await waitFor(() => {
+      const mainError = sut.getByTestId('main-error');
+      expect(mainError.textContent).toBe(error.message);
+    });
+
+    const errorWrap = sut.getByTestId('error-wrap');
+    expect(errorWrap.childElementCount).toBe(1);
+  });
+
   it('Should go to signup page', async () => {
     const {sut} = makeSut();
     const signupButton = sut.getByTestId('signup');
