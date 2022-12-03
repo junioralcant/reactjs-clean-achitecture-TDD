@@ -9,6 +9,7 @@ import {
   EmailInUseError,
   UnexpectedError,
 } from '../../../domain/errors';
+import {mockAccountModel} from '../../../domain/test';
 
 type SutType = {
   sut: RemoteAddAccount;
@@ -76,5 +77,18 @@ describe('RemoteAddAccount', () => {
     };
     const promise = sut.add(mockAddAccountParams());
     await expect(promise).rejects.toThrow(new UnexpectedError());
+  });
+
+  it('Should return an AccountModel if HttpPostClient returns 200', async () => {
+    const {sut, httpPostClientSpy} = makeSut();
+    const httpResult = mockAccountModel();
+    httpPostClientSpy.response = {
+      statusCode: HttpStatusCode.ok,
+      body: httpResult,
+    };
+    const account = await sut.add(mockAddAccountParams());
+    console.log(account);
+
+    expect(account).toEqual(httpResult);
   });
 });
