@@ -1,4 +1,7 @@
-import {EmailInUseError} from '../../../domain/errors';
+import {
+  EmailInUseError,
+  UnexpectedError,
+} from '../../../domain/errors';
 import {AccountModel} from '../../../domain/models';
 import {
   AddAccountParams,
@@ -26,12 +29,12 @@ export class RemoteAddAccount implements IAddAccount {
     });
 
     switch (response.statusCode) {
+      case HttpStatusCode.ok:
+        return accountModel;
       case HttpStatusCode.forbidden:
         throw new EmailInUseError();
       default:
-        break;
+        throw new UnexpectedError();
     }
-
-    return accountModel;
   }
 }
