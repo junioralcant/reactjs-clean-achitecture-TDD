@@ -19,10 +19,6 @@ export class RemoteAddAccount implements IAddAccount {
   ) {}
 
   async add(params: AddAccountParams): Promise<AccountModel> {
-    const accountModel: AccountModel = {
-      accessToken: '',
-    };
-
     const response = await this.httpPostClient.post({
       url: this.url,
       body: params,
@@ -30,7 +26,7 @@ export class RemoteAddAccount implements IAddAccount {
 
     switch (response.statusCode) {
       case HttpStatusCode.ok:
-        return accountModel;
+        return response.body as AccountModel;
       case HttpStatusCode.forbidden:
         throw new EmailInUseError();
       default:
