@@ -1,9 +1,10 @@
+import {EmailInUseError} from '../../../domain/errors';
 import {AccountModel} from '../../../domain/models';
 import {
   AddAccountParams,
   IAddAccount,
 } from '../../../domain/useCases';
-import {IHttpPostClient} from '../../protocols/http';
+import {HttpStatusCode, IHttpPostClient} from '../../protocols/http';
 
 export class RemoteAddAccount implements IAddAccount {
   constructor(
@@ -19,10 +20,17 @@ export class RemoteAddAccount implements IAddAccount {
       accessToken: '',
     };
 
-    await this.httpPostClient.post({
+    const response = await this.httpPostClient.post({
       url: this.url,
       body: params,
     });
+
+    switch (response.statusCode) {
+      case HttpStatusCode.forbidden:
+        throw new EmailInUseError();
+      default:
+        break;
+    }
 
     return accountModel;
   }
