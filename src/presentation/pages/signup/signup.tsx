@@ -1,3 +1,4 @@
+import {useState} from 'react';
 import {Footer} from '../../components/footer/footer';
 import {FormStatus} from '../../components/form-status/form-status';
 import {Input} from '../../components/input/input';
@@ -6,11 +7,20 @@ import {CreateContextForm} from '../../contexs/form/form-context';
 import './signup-styles.scss';
 
 export function SignUp() {
+  const [state] = useState({
+    isLoading: false,
+    nameError: 'Campo obrigatório',
+    emailError: 'Campo obrigatório',
+    passwordError: 'Campo obrigatório',
+    passwordConfirmationError: 'Campo obrigatório',
+    mainError: '',
+  });
+
   return (
     <div className="signup">
       <LoginHeader />
 
-      <CreateContextForm.Provider value={{state: {}}}>
+      <CreateContextForm.Provider value={{state}}>
         <form className="form">
           <h2>Criar conta</h2>
 
@@ -38,7 +48,12 @@ export function SignUp() {
             placeholder="Repita sua senha"
           />
 
-          <button className="submit" type="submit">
+          <button
+            data-testid="submit"
+            disabled
+            className="submit"
+            type="submit"
+          >
             Entrar
           </button>
           <span className="link">Voltar para Login</span>
