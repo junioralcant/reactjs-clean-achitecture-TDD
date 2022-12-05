@@ -9,6 +9,7 @@ import {faker} from '@faker-js/faker';
 import {Login} from './login';
 import {
   AuthenticationSpy,
+  Helper,
   SaveAccessTokenMock,
   ValidationStub,
 } from '../../test';
@@ -90,21 +91,10 @@ describe('Login Component', () => {
 
     const {sut} = makeSut({validationError});
 
-    const errorWrap = sut.getByTestId('error-wrap');
-    expect(errorWrap.childElementCount).toBe(0);
-
-    const submitButton = sut.getByTestId(
-      'submit'
-    ) as HTMLButtonElement;
-    expect(submitButton.disabled).toBe(true);
-
-    const emailStatus = sut.getByTestId('email-status');
-    expect(emailStatus.title).toBe(validationError);
-    expect(emailStatus.textContent).toBe('🔴');
-
-    const passwordStatus = sut.getByTestId('password-status');
-    expect(passwordStatus.title).toBe(validationError);
-    expect(passwordStatus.textContent).toBe('🔴');
+    Helper.testChildCount(sut, 'error-wrap', 0);
+    Helper.testButtonIsDisabled(sut, 'submit', true);
+    Helper.testStatusForField(sut, 'email', validationError);
+    Helper.testStatusForField(sut, 'password', validationError);
   });
 
   it('Should show email error if Validation fails', () => {
@@ -113,9 +103,7 @@ describe('Login Component', () => {
 
     populateEmailField(sut);
 
-    const emailStatus = sut.getByTestId('email-status');
-    expect(emailStatus.title).toBe(validationError);
-    expect(emailStatus.textContent).toBe('🔴');
+    Helper.testStatusForField(sut, 'email', validationError);
   });
 
   it('Should show password error if Validation fails', () => {
@@ -124,29 +112,25 @@ describe('Login Component', () => {
 
     populatePasswordField(sut);
 
-    const passwordStatus = sut.getByTestId('password-status');
-    expect(passwordStatus.title).toBe(validationError);
-    expect(passwordStatus.textContent).toBe('🔴');
+    Helper.testStatusForField(sut, 'password', validationError);
   });
 
   it('Should show valid email state if validation succeeds', () => {
+    const validationError = '';
     const {sut} = makeSut();
 
     populateEmailField(sut);
 
-    const emailStatus = sut.getByTestId('email-status');
-    expect(emailStatus.title).toBe('Tudo ok!');
-    expect(emailStatus.textContent).toBe('🟢');
+    Helper.testStatusForField(sut, 'password', validationError);
   });
 
   it('Should show valid password state if validation succeeds', () => {
+    const validationError = '';
     const {sut} = makeSut();
 
     populatePasswordField(sut);
 
-    const passwordStatus = sut.getByTestId('password-status');
-    expect(passwordStatus.title).toBe('Tudo ok!');
-    expect(passwordStatus.textContent).toBe('🟢');
+    Helper.testStatusForField(sut, 'password', validationError);
   });
 
   it('Should enble submit button if form is valid', () => {
@@ -155,11 +139,7 @@ describe('Login Component', () => {
     populateEmailField(sut);
     populatePasswordField(sut);
 
-    const submitButton = sut.getByTestId(
-      'submit'
-    ) as HTMLButtonElement;
-
-    expect(submitButton.disabled).toBe(false);
+    Helper.testButtonIsDisabled(sut, 'submit', false);
   });
 
   it('Should show spinner on submit', () => {
@@ -220,8 +200,7 @@ describe('Login Component', () => {
       expect(mainError.textContent).toBe(error.message);
     });
 
-    const errorWrap = sut.getByTestId('error-wrap');
-    expect(errorWrap.childElementCount).toBe(1);
+    Helper.testChildCount(sut, 'error-wrap', 1);
   });
 
   it('Should call SaveAccessToken on sucess', async () => {
@@ -253,8 +232,7 @@ describe('Login Component', () => {
       expect(mainError.textContent).toBe(error.message);
     });
 
-    const errorWrap = sut.getByTestId('error-wrap');
-    expect(errorWrap.childElementCount).toBe(1);
+    Helper.testChildCount(sut, 'error-wrap', 1);
   });
 
   it('Should go to signup page', async () => {
