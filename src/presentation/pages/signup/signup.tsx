@@ -43,12 +43,23 @@ export function SignUp({validation}: Props) {
     state.passwordConfirmation,
   ]);
 
+  async function handleSubmit(
+    event: React.FormEvent<HTMLFormElement>
+  ): Promise<void> {
+    event.preventDefault();
+
+    setState({
+      ...state,
+      isLoading: true,
+    });
+  }
+
   return (
     <div className="signup">
       <LoginHeader />
 
       <CreateContextForm.Provider value={{state, setState}}>
-        <form className="form">
+        <form className="form" onSubmit={handleSubmit}>
           <h2>Criar conta</h2>
 
           <Input
