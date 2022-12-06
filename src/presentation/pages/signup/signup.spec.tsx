@@ -80,6 +80,13 @@ describe('Signup Component', () => {
     );
   });
 
+  it('Should show valid name state if validation succeeds', () => {
+    const {sut} = makeSut();
+
+    Helper.populateField(sut, 'name');
+    Helper.testStatusForField(sut, 'name');
+  });
+
   it('Should show valid email state if validation succeeds', () => {
     const {sut} = makeSut();
 
