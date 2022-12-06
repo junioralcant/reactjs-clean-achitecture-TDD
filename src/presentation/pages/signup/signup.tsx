@@ -1,4 +1,5 @@
 import {useEffect, useState} from 'react';
+import {IAddAccount} from '../../../domain/useCases';
 import {Footer} from '../../components/footer/footer';
 import {FormStatus} from '../../components/form-status/form-status';
 import {Input} from '../../components/input/input';
@@ -9,9 +10,10 @@ import './signup-styles.scss';
 
 type Props = {
   validation: IValidation;
+  addAccount: IAddAccount;
 };
 
-export function SignUp({validation}: Props) {
+export function SignUp({validation, addAccount}: Props) {
   const [state, setState] = useState({
     isLoading: false,
     name: '',
@@ -51,6 +53,13 @@ export function SignUp({validation}: Props) {
     setState({
       ...state,
       isLoading: true,
+    });
+
+    await addAccount.add({
+      name: state.name,
+      email: state.email,
+      password: state.password,
+      passwordConfirmation: state.passwordConfirmation,
     });
   }
 
