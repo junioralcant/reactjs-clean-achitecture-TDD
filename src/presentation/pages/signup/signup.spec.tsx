@@ -79,4 +79,11 @@ describe('Signup Component', () => {
       validationError
     );
   });
+
+  it('Should show valid email state if validation succeeds', () => {
+    const {sut} = makeSut();
+
+    Helper.populateField(sut, 'email');
+    Helper.testStatusForField(sut, 'email');
+  });
 });
