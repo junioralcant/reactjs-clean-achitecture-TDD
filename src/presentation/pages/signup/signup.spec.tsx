@@ -41,14 +41,6 @@ function simulateValidSubmit(
   fireEvent.click(submitButton);
 }
 
-function testElementExists(
-  sut: RenderResult,
-  fieldName: string
-): void {
-  const el = sut.getByTestId(fieldName);
-  expect(el).toBeTruthy();
-}
-
 describe('Signup Component', () => {
   afterEach(cleanup);
   it('Should start with intial state', () => {
@@ -152,6 +144,6 @@ describe('Signup Component', () => {
 
     simulateValidSubmit(sut);
 
-    testElementExists(sut, 'spinner');
+    Helper.testElementExists(sut, 'spinner');
   });
 });
