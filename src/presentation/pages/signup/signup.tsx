@@ -18,7 +18,8 @@ export function SignUp({validation}: Props) {
     nameError: '',
     email: '',
     emailError: '',
-    passwordError: 'Campo obrigatório',
+    password: '',
+    passwordError: '',
     passwordConfirmationError: 'Campo obrigatório',
     mainError: '',
   });
@@ -28,8 +29,9 @@ export function SignUp({validation}: Props) {
       ...state,
       nameError: validation.validate('name', state.name),
       emailError: validation.validate('email', state.email),
+      passwordError: validation.validate('password', state.password),
     });
-  }, [state.name, state.email]);
+  }, [state.name, state.email, state.password]);
 
   return (
     <div className="signup">
