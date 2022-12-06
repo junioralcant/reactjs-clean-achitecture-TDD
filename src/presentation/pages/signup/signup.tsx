@@ -77,9 +77,14 @@ export function SignUp({validation}: Props) {
 
           <button
             data-testid="submit"
-            disabled
             className="submit"
             type="submit"
+            disabled={
+              !!state.nameError ||
+              !!state.emailError ||
+              !!state.passwordError ||
+              !!state.passwordConfirmationError
+            }
           >
             Entrar
           </button>
