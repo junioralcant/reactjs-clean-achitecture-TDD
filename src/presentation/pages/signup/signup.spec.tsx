@@ -107,4 +107,15 @@ describe('Signup Component', () => {
     Helper.populateField(sut, 'passwordConfirmation');
     Helper.testStatusForField(sut, 'passwordConfirmation');
   });
+
+  it('Should enble submit button if form is valid', () => {
+    const {sut} = makeSut();
+
+    Helper.populateField(sut, 'name');
+    Helper.populateField(sut, 'email');
+    Helper.populateField(sut, 'password');
+    Helper.populateField(sut, 'passwordConfirmation');
+
+    Helper.testButtonIsDisabled(sut, 'submit', false);
+  });
 });
