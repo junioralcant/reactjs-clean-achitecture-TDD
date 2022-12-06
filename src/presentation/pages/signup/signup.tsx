@@ -50,6 +50,10 @@ export function SignUp({validation, addAccount}: Props) {
   ): Promise<void> {
     event.preventDefault();
 
+    if (state.isLoading) {
+      return;
+    }
+
     setState({
       ...state,
       isLoading: true,
