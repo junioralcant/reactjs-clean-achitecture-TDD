@@ -36,7 +36,7 @@ describe('Signup Component', () => {
     Helper.testStatusForField(
       sut,
       'passwordConfirmation',
-      'Campo obrigatório'
+      validationError
     );
   });
 
@@ -65,5 +65,18 @@ describe('Signup Component', () => {
     Helper.populateField(sut, 'password');
 
     Helper.testStatusForField(sut, 'password', validationError);
+  });
+
+  it('Should show passwordConfirmation error if Validation fails', () => {
+    const validationError = faker.internet.domainWord();
+    const {sut} = makeSut({validationError});
+
+    Helper.populateField(sut, 'passwordConfirmation');
+
+    Helper.testStatusForField(
+      sut,
+      'passwordConfirmation',
+      validationError
+    );
   });
 });
