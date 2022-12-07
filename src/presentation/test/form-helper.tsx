@@ -48,3 +48,12 @@ export function testElementExists(
   const el = sut.getByTestId(fieldName);
   expect(el).toBeTruthy();
 }
+
+export function testElementText(
+  sut: RenderResult,
+  fielName: string,
+  text: string
+): void {
+  const el = sut.getByTestId(fielName);
+  expect(el.textContent).toBe(text);
+}

@@ -179,8 +179,7 @@ describe('Login Component', () => {
     simulateValidSubmit(sut);
 
     await waitFor(() => {
-      const mainError = sut.getByTestId('main-error');
-      expect(mainError.textContent).toBe(error.message);
+      Helper.testElementText(sut, 'main-error', error.message);
     });
 
     Helper.testChildCount(sut, 'error-wrap', 1);
@@ -211,8 +210,7 @@ describe('Login Component', () => {
     simulateValidSubmit(sut);
 
     await waitFor(() => {
-      const mainError = sut.getByTestId('main-error');
-      expect(mainError.textContent).toBe(error.message);
+      Helper.testElementText(sut, 'main-error', error.message);
     });
 
     Helper.testChildCount(sut, 'error-wrap', 1);

@@ -48,15 +48,6 @@ function simulateValidSubmit(
   fireEvent.click(submitButton);
 }
 
-function testElementText(
-  sut: RenderResult,
-  fielName: string,
-  text: string
-): void {
-  const el = sut.getByTestId(fielName);
-  expect(el.textContent).toBe(text);
-}
-
 describe('Signup Component', () => {
   afterEach(cleanup);
   it('Should start with intial state', () => {
@@ -207,7 +198,7 @@ describe('Signup Component', () => {
     simulateValidSubmit(sut);
 
     await waitFor(() => {
-      testElementText(sut, 'main-error', error.message);
+      Helper.testElementText(sut, 'main-error', error.message);
     });
 
     Helper.testChildCount(sut, 'error-wrap', 1);
