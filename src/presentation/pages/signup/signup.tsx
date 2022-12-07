@@ -140,7 +140,13 @@ export function SignUp({
           >
             Entrar
           </button>
-          <span className="link">Voltar para Login</span>
+          <span
+            data-testid="login-link"
+            onClick={() => navigate('/login')}
+            className="link"
+          >
+            Voltar para Login
+          </span>
           <FormStatus />
         </form>
       </CreateContextForm.Provider>
