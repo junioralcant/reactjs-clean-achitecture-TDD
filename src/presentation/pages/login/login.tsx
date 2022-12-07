@@ -8,6 +8,7 @@ import {Footer} from '../../components/footer/footer';
 import {FormStatus} from '../../components/form-status/form-status';
 import {Input} from '../../components/input/input';
 import {LoginHeader} from '../../components/login-header/login-header';
+import {SubmitButton} from '../../components/submit-button/submit-button';
 import {CreateContextForm} from '../../contexs/form/form-context';
 import {IValidation} from '../../protocols/validation';
 import './login-styles.scss';
@@ -25,6 +26,7 @@ export function Login({
 }: Props) {
   const [state, setState] = useState({
     isLoading: false,
+    isFormInvalid: true,
     email: '',
     password: '',
     emailError: '',
@@ -35,10 +37,17 @@ export function Login({
   const navigate = useNavigate();
 
   useEffect(() => {
+    const emailError = validation.validate('email', state.email);
+    const passwordError = validation.validate(
+      'password',
+      state.password
+    );
+
     setState({
       ...state,
-      emailError: validation.validate('email', state.email),
-      passwordError: validation.validate('password', state.password),
+      emailError,
+      passwordError,
+      isFormInvalid: !!emailError || !!passwordError,
     });
   }, [state.email, state.password]);
 
@@ -48,11 +57,7 @@ export function Login({
     event.preventDefault();
 
     try {
-      if (
-        state.isLoading ||
-        state.emailError ||
-        state.passwordError
-      ) {
+      if (state.isLoading || state.isFormInvalid) {
         return;
       }
 
@@ -101,14 +106,8 @@ export function Login({
             placeholder="Digite sua senha"
           />
 
-          <button
-            data-testid="submit"
-            className="submit"
-            type="submit"
-            disabled={!!state.emailError || !!state.passwordError}
-          >
-            Entrar
-          </button>
+          <SubmitButton text="Entrar" />
+
           <span
             onClick={() => navigate('/signup')}
             data-testid="signup-link"

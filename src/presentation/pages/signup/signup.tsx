@@ -8,6 +8,7 @@ import {Footer} from '../../components/footer/footer';
 import {FormStatus} from '../../components/form-status/form-status';
 import {Input} from '../../components/input/input';
 import {LoginHeader} from '../../components/login-header/login-header';
+import {SubmitButton} from '../../components/submit-button/submit-button';
 import {CreateContextForm} from '../../contexs/form/form-context';
 import {IValidation} from '../../protocols/validation';
 import './signup-styles.scss';
@@ -27,6 +28,7 @@ export function SignUp({
 
   const [state, setState] = useState({
     isLoading: false,
+    isFormInvalid: true,
     name: '',
     nameError: '',
     email: '',
@@ -39,15 +41,28 @@ export function SignUp({
   });
 
   useEffect(() => {
+    const nameError = validation.validate('name', state.name);
+    const emailError = validation.validate('email', state.email);
+    const passwordError = validation.validate(
+      'password',
+      state.password
+    );
+    const passwordConfirmationError = validation.validate(
+      'passwordConfirmation',
+      state.passwordConfirmation
+    );
+
     setState({
       ...state,
-      nameError: validation.validate('name', state.name),
-      emailError: validation.validate('email', state.email),
-      passwordError: validation.validate('password', state.password),
-      passwordConfirmationError: validation.validate(
-        'passwordConfirmation',
-        state.passwordConfirmation
-      ),
+      nameError,
+      emailError,
+      passwordError,
+      passwordConfirmationError,
+      isFormInvalid:
+        !!nameError ||
+        !!emailError ||
+        !!passwordError ||
+        !!passwordConfirmationError,
     });
   }, [
     state.name,
@@ -62,13 +77,7 @@ export function SignUp({
     event.preventDefault();
 
     try {
-      if (
-        state.isLoading ||
-        state.nameError ||
-        state.emailError ||
-        state.passwordError ||
-        state.passwordConfirmationError
-      ) {
+      if (state.isLoading || state.isFormInvalid) {
         return;
       }
 
@@ -127,19 +136,8 @@ export function SignUp({
             placeholder="Repita sua senha"
           />
 
-          <button
-            data-testid="submit"
-            className="submit"
-            type="submit"
-            disabled={
-              !!state.nameError ||
-              !!state.emailError ||
-              !!state.passwordError ||
-              !!state.passwordConfirmationError
-            }
-          >
-            Entrar
-          </button>
+          <SubmitButton text="Cadastrar" />
+
           <span
             data-testid="login-link"
             onClick={() => navigate('/login')}
