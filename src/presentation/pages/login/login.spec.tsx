@@ -218,7 +218,7 @@ describe('Login Component', () => {
 
   it('Should go to signup page', async () => {
     const {sut} = makeSut();
-    const signupButton = sut.getByTestId('signup');
+    const signupButton = sut.getByTestId('signup-link');
     fireEvent.click(signupButton);
     expect(mockedUsedNavigate).toHaveBeenCalledWith('/signup');
   });

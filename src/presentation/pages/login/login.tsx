@@ -111,7 +111,7 @@ export function Login({
           </button>
           <span
             onClick={() => navigate('/signup')}
-            data-testid="signup"
+            data-testid="signup-link"
             className="link"
           >
             Criar conta
