@@ -253,4 +253,11 @@ describe('Signup Component', () => {
 
     Helper.testChildCount(sut, 'error-wrap', 1);
   });
+
+  it('Should go to signup page', async () => {
+    const {sut} = makeSut();
+    const loginButton = sut.getByTestId('login-link');
+    fireEvent.click(loginButton);
+    expect(mockedUsedNavigate).toHaveBeenCalledWith('/login');
+  });
 });
