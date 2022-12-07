@@ -6,13 +6,19 @@ import {
   waitFor,
 } from '@testing-library/react';
 import {faker} from '@faker-js/faker';
-import {AddAccountSpy, Helper, ValidationStub} from '../../test';
+import {
+  AddAccountSpy,
+  Helper,
+  SaveAccessTokenMock,
+  ValidationStub,
+} from '../../test';
 import {SignUp} from './signup';
 import {EmailInUseError} from '../../../domain/errors';
 
 type SutTypes = {
   sut: RenderResult;
   addAccountSpy: AddAccountSpy;
+  saveAccessTokenMock: SaveAccessTokenMock;
 };
 
 type SutParams = {
@@ -22,14 +28,21 @@ type SutParams = {
 function makeSut(params?: SutParams): SutTypes {
   const validationStub = new ValidationStub();
   const addAccountSpy = new AddAccountSpy();
+  const saveAccessTokenMock = new SaveAccessTokenMock();
+
   validationStub.errorMessage = params?.validationError as string;
   const sut = render(
-    <SignUp validation={validationStub} addAccount={addAccountSpy} />
+    <SignUp
+      validation={validationStub}
+      addAccount={addAccountSpy}
+      saveAccessToken={saveAccessTokenMock}
+    />
   );
 
   return {
     sut,
     addAccountSpy,
+    saveAccessTokenMock,
   };
 }
 
@@ -47,6 +60,12 @@ function simulateValidSubmit(
   const submitButton = sut.getByTestId('submit');
   fireEvent.click(submitButton);
 }
+
+const mockedUsedNavigate = jest.fn();
+jest.mock('react-router-dom', () => ({
+  ...(jest.requireActual('react-router-dom') as any),
+  useNavigate: () => mockedUsedNavigate,
+}));
 
 describe('Signup Component', () => {
   afterEach(cleanup);
@@ -202,5 +221,19 @@ describe('Signup Component', () => {
     });
 
     Helper.testChildCount(sut, 'error-wrap', 1);
+  });
+
+  it('Should call SaveAccessToken on sucess', async () => {
+    const {sut, addAccountSpy, saveAccessTokenMock} = makeSut();
+
+    simulateValidSubmit(sut);
+
+    await waitFor(() => {
+      expect(saveAccessTokenMock.accesssToken).toBe(
+        addAccountSpy.account.accessToken
+      );
+    });
+
+    expect(mockedUsedNavigate).toHaveBeenCalledWith('/');
   });
 });
