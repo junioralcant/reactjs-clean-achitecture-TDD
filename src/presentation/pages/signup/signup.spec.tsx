@@ -177,4 +177,15 @@ describe('Signup Component', () => {
 
     expect(addAccountSpy.callsCount).toBe(1);
   });
+
+  it('Should not call AddAccount if form is invalid', () => {
+    const validationError = faker.internet.domainWord();
+    const {sut, addAccountSpy} = makeSut({validationError});
+
+    simulateValidSubmit(sut, '');
+
+    console.log(addAccountSpy);
+
+    expect(addAccountSpy.callsCount).toBe(0);
+  });
 });
