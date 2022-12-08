@@ -4,9 +4,11 @@ import {InvalidFieldError} from '../../errors/invalid-field-error';
 export class MinLengthValidation implements IFielValidation {
   constructor(readonly field: string, readonly minLength: number) {}
 
-  validate(value: string): Error | null {
-    return value.length >= this.minLength
-      ? null
-      : new InvalidFieldError();
+  validate(input: object): Error | null {
+    const value = input[this.field as keyof typeof input] as string;
+
+    return value?.length < this.minLength
+      ? new InvalidFieldError()
+      : null;
   }
 }

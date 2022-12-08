@@ -1,5 +1,5 @@
 export interface IValidation {
-  validate(fieldName: string, fieldValue: string): string;
+  validate(fieldName: string, input: object): string;
   getMessageError?(): string;
   setMessageError?(message: string): string;
 }

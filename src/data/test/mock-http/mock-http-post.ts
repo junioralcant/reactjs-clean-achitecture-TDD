@@ -1,5 +1,5 @@
-import { faker } from '@faker-js/faker';
-import { HttpPostParams } from '../protocols/http';
+import {faker} from '@faker-js/faker';
+import {HttpPostParams} from '../../protocols/http';
 
 export function mockPostReqest(): HttpPostParams<any> {
   return {

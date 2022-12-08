@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { CreateContextForm } from '../../contexs/form/form-context';
+import React, {useContext} from 'react';
+import {CreateContextForm} from '../../contexs/form/form-context';
 import './input-styles.scss';
 
 type Props = React.DetailedHTMLProps<
@@ -8,7 +8,7 @@ type Props = React.DetailedHTMLProps<
 >;
 
 export function Input(props: Props) {
-  const { state, setState } = useContext(CreateContextForm);
+  const {state, setState} = useContext(CreateContextForm);
   const error = state[`${props.name}Error`];
 
   function getStatus(): string {

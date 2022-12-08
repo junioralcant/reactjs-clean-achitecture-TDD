@@ -6,19 +6,18 @@ import {
   waitFor,
 } from '@testing-library/react';
 import {faker} from '@faker-js/faker';
-import {Login} from './login';
 import {
-  AuthenticationSpy,
+  AddAccountSpy,
   Helper,
   SaveAccessTokenMock,
   ValidationStub,
 } from '../../test';
-import {InvalidCredentilsError} from '../../../domain/errors';
-import {BrowserRouter} from 'react-router-dom';
+import {SignUp} from './signup';
+import {EmailInUseError} from '../../../domain/errors';
 
 type SutTypes = {
   sut: RenderResult;
-  authenticationSpy: AuthenticationSpy;
+  addAccountSpy: AddAccountSpy;
   saveAccessTokenMock: SaveAccessTokenMock;
 };
 
@@ -28,25 +27,38 @@ type SutParams = {
 
 function makeSut(params?: SutParams): SutTypes {
   const validationStub = new ValidationStub();
-  const authenticationSpy = new AuthenticationSpy();
+  const addAccountSpy = new AddAccountSpy();
   const saveAccessTokenMock = new SaveAccessTokenMock();
-  validationStub.setMessageError(params?.validationError as string);
 
+  validationStub.errorMessage = params?.validationError as string;
   const sut = render(
-    <BrowserRouter>
-      <Login
-        validation={validationStub}
-        authentication={authenticationSpy}
-        saveAccessToken={saveAccessTokenMock}
-      />
-    </BrowserRouter>
+    <SignUp
+      validation={validationStub}
+      addAccount={addAccountSpy}
+      saveAccessToken={saveAccessTokenMock}
+    />
   );
 
   return {
     sut,
-    authenticationSpy,
+    addAccountSpy,
     saveAccessTokenMock,
   };
+}
+
+function simulateValidSubmit(
+  sut: RenderResult,
+  name = faker.random.word(),
+  email = faker.internet.email(),
+  password = faker.internet.password()
+): void {
+  Helper.populateField(sut, 'name', name);
+  Helper.populateField(sut, 'email', email);
+  Helper.populateField(sut, 'password', password);
+  Helper.populateField(sut, 'passwordConfirmation', password);
+
+  const submitButton = sut.getByTestId('submit');
+  fireEvent.click(submitButton);
 }
 
 const mockedUsedNavigate = jest.fn();
@@ -55,30 +67,32 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockedUsedNavigate,
 }));
 
-function simulateValidSubmit(
-  sut: RenderResult,
-  email = faker.internet.email(),
-  password = faker.internet.password()
-): void {
-  Helper.populateField(sut, 'email', email);
-  Helper.populateField(sut, 'password', password);
-
-  const submitButton = sut.getByTestId('submit');
-  fireEvent.click(submitButton);
-}
-
-describe('Login Component', () => {
+describe('Signup Component', () => {
   afterEach(cleanup);
-
   it('Should start with intial state', () => {
-    const validationError = faker.internet.domainWord();
+    const validationError = faker.random.word();
 
     const {sut} = makeSut({validationError});
 
     Helper.testChildCount(sut, 'error-wrap', 0);
     Helper.testButtonIsDisabled(sut, 'submit', true);
+    Helper.testStatusForField(sut, 'name', validationError);
     Helper.testStatusForField(sut, 'email', validationError);
     Helper.testStatusForField(sut, 'password', validationError);
+    Helper.testStatusForField(
+      sut,
+      'passwordConfirmation',
+      validationError
+    );
+  });
+
+  it('Should show name error if Validation fails', () => {
+    const validationError = faker.internet.domainWord();
+    const {sut} = makeSut({validationError});
+
+    Helper.populateField(sut, 'name');
+
+    Helper.testStatusForField(sut, 'name', validationError);
   });
 
   it('Should show email error if Validation fails', () => {
@@ -99,29 +113,54 @@ describe('Login Component', () => {
     Helper.testStatusForField(sut, 'password', validationError);
   });
 
+  it('Should show passwordConfirmation error if Validation fails', () => {
+    const validationError = faker.internet.domainWord();
+    const {sut} = makeSut({validationError});
+
+    Helper.populateField(sut, 'passwordConfirmation');
+
+    Helper.testStatusForField(
+      sut,
+      'passwordConfirmation',
+      validationError
+    );
+  });
+
+  it('Should show valid name state if validation succeeds', () => {
+    const {sut} = makeSut();
+
+    Helper.populateField(sut, 'name');
+    Helper.testStatusForField(sut, 'name');
+  });
+
   it('Should show valid email state if validation succeeds', () => {
-    const validationError = '';
     const {sut} = makeSut();
 
     Helper.populateField(sut, 'email');
-
-    Helper.testStatusForField(sut, 'password', validationError);
+    Helper.testStatusForField(sut, 'email');
   });
 
   it('Should show valid password state if validation succeeds', () => {
-    const validationError = '';
     const {sut} = makeSut();
 
     Helper.populateField(sut, 'password');
+    Helper.testStatusForField(sut, 'password');
+  });
 
-    Helper.testStatusForField(sut, 'password', validationError);
+  it('Should show valid passwordConfirmation state if validation succeeds', () => {
+    const {sut} = makeSut();
+
+    Helper.populateField(sut, 'passwordConfirmation');
+    Helper.testStatusForField(sut, 'passwordConfirmation');
   });
 
   it('Should enble submit button if form is valid', () => {
     const {sut} = makeSut();
 
+    Helper.populateField(sut, 'name');
     Helper.populateField(sut, 'email');
     Helper.populateField(sut, 'password');
+    Helper.populateField(sut, 'passwordConfirmation');
 
     Helper.testButtonIsDisabled(sut, 'submit', false);
   });
@@ -134,47 +173,46 @@ describe('Login Component', () => {
     Helper.testElementExists(sut, 'spinner');
   });
 
-  it('Should call Authentication with correct values', () => {
-    const {sut, authenticationSpy} = makeSut();
+  it('Should call AddAccount with correct values', () => {
+    const {sut, addAccountSpy} = makeSut();
 
+    const name = faker.random.word();
     const email = faker.internet.email();
-
     const password = faker.internet.password();
 
-    simulateValidSubmit(sut, email, password);
+    simulateValidSubmit(sut, name, email, password);
 
-    expect(authenticationSpy.params).toEqual({
+    expect(addAccountSpy.params).toEqual({
+      name,
       email,
       password,
+      passwordConfirmation: password,
     });
   });
 
-  it('Should call Authentication only once', () => {
-    const {sut, authenticationSpy} = makeSut();
+  it('Should call AddAccount only once', () => {
+    const {sut, addAccountSpy} = makeSut();
 
     simulateValidSubmit(sut);
     simulateValidSubmit(sut);
 
-    expect(authenticationSpy.getCallsCount()).toBe(1);
+    expect(addAccountSpy.callsCount).toBe(1);
   });
 
-  it('Should not call Authentication if form is invalid', () => {
+  it('Should not call AddAccount if form is invalid', () => {
     const validationError = faker.internet.domainWord();
-    const {sut, authenticationSpy} = makeSut({validationError});
+    const {sut, addAccountSpy} = makeSut({validationError});
 
-    Helper.populateField(sut, 'email');
-    fireEvent.submit(sut.getByTestId('form'));
+    simulateValidSubmit(sut, '');
 
-    expect(authenticationSpy.getCallsCount()).toBe(0);
+    expect(addAccountSpy.callsCount).toBe(0);
   });
 
-  it('Should present error if Authentication fails', async () => {
-    const {sut, authenticationSpy} = makeSut();
-    const error = new InvalidCredentilsError();
+  it('Should present error if AddAccount fails', async () => {
+    const {sut, addAccountSpy} = makeSut();
+    const error = new EmailInUseError();
 
-    jest
-      .spyOn(authenticationSpy, 'auth')
-      .mockRejectedValueOnce(error);
+    jest.spyOn(addAccountSpy, 'add').mockRejectedValueOnce(error);
 
     simulateValidSubmit(sut);
 
@@ -186,13 +224,13 @@ describe('Login Component', () => {
   });
 
   it('Should call SaveAccessToken on sucess', async () => {
-    const {sut, authenticationSpy, saveAccessTokenMock} = makeSut();
+    const {sut, addAccountSpy, saveAccessTokenMock} = makeSut();
 
     simulateValidSubmit(sut);
 
     await waitFor(() => {
       expect(saveAccessTokenMock.accesssToken).toBe(
-        authenticationSpy.account.accessToken
+        addAccountSpy.account.accessToken
       );
     });
 
@@ -201,7 +239,7 @@ describe('Login Component', () => {
 
   it('Should present error if SaveAccessToken fails', async () => {
     const {sut, saveAccessTokenMock} = makeSut();
-    const error = new InvalidCredentilsError();
+    const error = new EmailInUseError();
 
     jest
       .spyOn(saveAccessTokenMock, 'save')
@@ -218,8 +256,8 @@ describe('Login Component', () => {
 
   it('Should go to signup page', async () => {
     const {sut} = makeSut();
-    const signupButton = sut.getByTestId('signup-link');
-    fireEvent.click(signupButton);
-    expect(mockedUsedNavigate).toHaveBeenCalledWith('/signup');
+    const loginButton = sut.getByTestId('login-link');
+    fireEvent.click(loginButton);
+    expect(mockedUsedNavigate).toHaveBeenCalledWith('/login');
   });
 });
