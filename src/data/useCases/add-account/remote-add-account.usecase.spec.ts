@@ -87,7 +87,6 @@ describe('RemoteAddAccount', () => {
       body: httpResult,
     };
     const account = await sut.add(mockAddAccountParams());
-    console.log(account);
 
     expect(account).toEqual(httpResult);
   });
