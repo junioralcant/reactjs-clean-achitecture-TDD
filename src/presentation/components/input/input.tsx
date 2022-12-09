@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {RefObject, useContext, useRef} from 'react';
 import {CreateContextForm} from '../../contexs/form/form-context';
 import './input-styles.scss';
 
@@ -9,38 +9,36 @@ type Props = React.DetailedHTMLProps<
 
 export function Input(props: Props) {
   const {state, setState} = useContext(CreateContextForm);
+  const inputRef = useRef() as RefObject<HTMLInputElement>;
   const error = state[`${props.name}Error`];
-
-  function getStatus(): string {
-    return error ? '🔴' : '🟢';
-  }
-
-  function getTitle(): string {
-    return error || 'Tudo ok!';
-  }
-
-  function handleChange(
-    event: React.FocusEvent<HTMLInputElement>
-  ): void {
-    setState({
-      ...state,
-      [event.target.name]: event.target.value,
-    });
-  }
 
   return (
     <div className="inputWrap">
       <input
         {...props}
+        ref={inputRef}
         data-testid={props.name}
-        onChange={handleChange}
+        placeholder=" "
+        onChange={(e) => {
+          setState({
+            ...state,
+            [e.target.name]: e.target.value,
+          });
+        }}
       />
+      <label
+        onClick={() => {
+          inputRef.current?.focus();
+        }}
+      >
+        {props.placeholder}
+      </label>
       <span
         data-testid={`${props.name}-status`}
-        title={getTitle()}
+        title={error || 'Tudo ok!'}
         className="status"
       >
-        {getStatus()}
+        {error ? '🔴' : '🟢'}
       </span>
     </div>
   );
