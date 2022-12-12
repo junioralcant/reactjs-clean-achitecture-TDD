@@ -1,6 +1,7 @@
 import {faker} from '@faker-js/faker';
 import {UnexpectedError} from '../../../domain/errors';
 import {SurveyModel} from '../../../domain/models';
+import {mockSurveyListModel} from '../../../domain/test';
 import {HttpStatusCode} from '../../protocols/http';
 import {HttpGetClientSpy} from '../../test';
 import {RemoteLoadSurveyList} from './remote-load-survey-list.usecase';
@@ -53,5 +54,17 @@ describe('RemoteLoadSurveyListUseCase', () => {
     };
     const promise = sut.loadAll();
     await expect(promise).rejects.toThrow(new UnexpectedError());
+  });
+
+  it('Should return a list of SurveyModel if HttpGetClient returns 200', async () => {
+    const {sut, httpGetClientSpy} = makeSut();
+    const httpResult = mockSurveyListModel();
+    httpGetClientSpy.response = {
+      statusCode: HttpStatusCode.ok,
+      body: httpResult,
+    };
+    const account = await sut.loadAll();
+
+    expect(account).toEqual(httpResult);
   });
 });
