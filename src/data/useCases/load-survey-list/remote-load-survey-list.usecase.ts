@@ -1,20 +1,19 @@
-import {
-  EmailInUseError,
-  UnexpectedError,
-} from '../../../domain/errors';
+import {UnexpectedError} from '../../../domain/errors';
+import {SurveyModel} from '../../../domain/models';
+import {ILoadSurveyList} from '../../../domain/useCases';
 import {HttpStatusCode, IHttpGetClient} from '../../protocols/http';
 
-export class RemoteLoadSurveyList {
+export class RemoteLoadSurveyList implements ILoadSurveyList {
   constructor(
     private readonly url: string,
-    private readonly httpGetClient: IHttpGetClient
+    private readonly httpGetClient: IHttpGetClient<SurveyModel[]>
   ) {}
 
-  async loadAll() {
+  async loadAll(): Promise<SurveyModel[] | undefined> {
     const response = await this.httpGetClient.get({url: this.url});
     switch (response.statusCode) {
       case HttpStatusCode.ok:
-        break;
+        return response.body;
       default:
         throw new UnexpectedError();
     }
