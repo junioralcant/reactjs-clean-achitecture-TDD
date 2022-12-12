@@ -1,9 +1,17 @@
-import {HttpGetParams, IHttpGetClient} from '../../protocols/http/';
+import {
+  HttpGetParams,
+  HttpReponse,
+  HttpStatusCode,
+  IHttpGetClient,
+} from '../../protocols/http/';
 
-export class HttpGetClientSpy implements IHttpGetClient {
+export class HttpGetClientSpy<R> implements IHttpGetClient<R> {
   url: string = '';
-
-  async get(params: HttpGetParams): Promise<void> {
+  response: HttpReponse<R> = {
+    statusCode: HttpStatusCode.ok,
+  };
+  async get(params: HttpGetParams): Promise<HttpReponse<R>> {
     this.url = params.url;
+    return this.response;
   }
 }
