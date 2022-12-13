@@ -19,24 +19,25 @@ export class AxiosHttpClient
       axiosResponse = error.response;
     }
 
-    return {
-      statusCode: axiosResponse.status,
-      body: axiosResponse.data,
-    };
+    return this.adapt(axiosResponse);
   }
 
   async get(params: HttpGetParams): Promise<HttpReponse> {
-    let axiostResponse: AxiosResponse;
+    let axiosResponse: AxiosResponse;
 
     try {
-      axiostResponse = await axios.get(params.url);
+      axiosResponse = await axios.get(params.url);
     } catch (error: any) {
-      axiostResponse = error.response;
+      axiosResponse = error.response;
     }
 
+    return this.adapt(axiosResponse);
+  }
+
+  private adapt(axiosResponse: AxiosResponse): HttpReponse {
     return {
-      statusCode: axiostResponse.status,
-      body: axiostResponse.data,
+      statusCode: axiosResponse.status,
+      body: axiosResponse.data,
     };
   }
 }
