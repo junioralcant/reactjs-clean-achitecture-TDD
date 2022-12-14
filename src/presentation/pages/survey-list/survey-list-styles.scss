@@ -88,6 +88,7 @@
                         font-size: 18px;
                         align-self: center;
                         margin: 24px;
+                        flex-grow: 1;
                     }
                 }
 
@@ -108,3 +109,19 @@
         }
     }
 } 
+
+
+@media only screen and (max-width: 600px) {
+    .surveyList {
+        .contenWrap {
+            ul {
+                flex-direction: column;
+
+                li {
+                    flex-basis: 100%;
+                    min-height: 200px;
+                }
+            }
+        }
+    } 
+}
