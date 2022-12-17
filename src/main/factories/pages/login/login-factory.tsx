@@ -3,7 +3,7 @@ import {makeRemoteAuthentication} from '../../usecases/authentication/remote-aut
 import {makeLocalUpdateCurrentAccountFactory} from '../../usecases/update-current-account/local-update-current-account-factory';
 import {makeLoginValidation} from './login-validation-factory';
 
-export function makeLogin() {
+export function MakeLogin() {
   return (
     <Login
       authentication={makeRemoteAuthentication()}

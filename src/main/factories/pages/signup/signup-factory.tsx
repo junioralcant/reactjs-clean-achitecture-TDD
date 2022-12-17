@@ -3,7 +3,7 @@ import {makeRemoteAddAccount} from '../../usecases/add-account/remote-add-accoun
 import {makeLocalUpdateCurrentAccountFactory} from '../../usecases/update-current-account/local-update-current-account-factory';
 import {makeSignUpValidation} from './signup-validation-factory';
 
-export function makeSignUp() {
+export function MakeSignUp() {
   return (
     <SignUp
       addAccount={makeRemoteAddAccount()}

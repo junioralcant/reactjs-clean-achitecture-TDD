@@ -1,13 +1,9 @@
-import React from 'react';
 import {Route, BrowserRouter, Routes} from 'react-router-dom';
-import {SurveyList} from '../pages/survey-list/survey-list';
+import {SurveyList} from '../../presentation/pages/survey-list/survey-list';
+import {MakeLogin} from '../factories/pages/login/login-factory';
+import {MakeSignUp} from '../factories/pages/signup/signup-factory';
 
-type Factory = {
-  MakeLogin: React.FC;
-  MakeSignUp: React.FC;
-};
-
-export function Router({MakeLogin, MakeSignUp}: Factory) {
+export function Router() {
   return (
     <BrowserRouter>
       <Routes>
