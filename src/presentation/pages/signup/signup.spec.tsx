@@ -9,7 +9,7 @@ import {faker} from '@faker-js/faker';
 import {
   AddAccountSpy,
   Helper,
-  SaveAccessTokenMock,
+  UpdateCurrentAccountMock,
   ValidationStub,
 } from '../../test';
 import {SignUp} from './signup';
@@ -18,7 +18,7 @@ import {EmailInUseError} from '../../../domain/errors';
 type SutTypes = {
   sut: RenderResult;
   addAccountSpy: AddAccountSpy;
-  saveAccessTokenMock: SaveAccessTokenMock;
+  updateCurrentAccountMock: UpdateCurrentAccountMock;
 };
 
 type SutParams = {
@@ -28,21 +28,21 @@ type SutParams = {
 function makeSut(params?: SutParams): SutTypes {
   const validationStub = new ValidationStub();
   const addAccountSpy = new AddAccountSpy();
-  const saveAccessTokenMock = new SaveAccessTokenMock();
+  const updateCurrentAccountMock = new UpdateCurrentAccountMock();
 
   validationStub.errorMessage = params?.validationError as string;
   const sut = render(
     <SignUp
       validation={validationStub}
       addAccount={addAccountSpy}
-      saveAccessToken={saveAccessTokenMock}
+      updateCurrentAccount={updateCurrentAccountMock}
     />
   );
 
   return {
     sut,
     addAccountSpy,
-    saveAccessTokenMock,
+    updateCurrentAccountMock,
   };
 }
 
@@ -224,13 +224,13 @@ describe('Signup Component', () => {
   });
 
   it('Should call SaveAccessToken on sucess', async () => {
-    const {sut, addAccountSpy, saveAccessTokenMock} = makeSut();
+    const {sut, addAccountSpy, updateCurrentAccountMock} = makeSut();
 
     simulateValidSubmit(sut);
 
     await waitFor(() => {
-      expect(saveAccessTokenMock.accesssToken).toBe(
-        addAccountSpy.account.accessToken
+      expect(updateCurrentAccountMock.account).toEqual(
+        addAccountSpy.account
       );
     });
 
@@ -238,11 +238,11 @@ describe('Signup Component', () => {
   });
 
   it('Should present error if SaveAccessToken fails', async () => {
-    const {sut, saveAccessTokenMock} = makeSut();
+    const {sut, updateCurrentAccountMock} = makeSut();
     const error = new EmailInUseError();
 
     jest
-      .spyOn(saveAccessTokenMock, 'save')
+      .spyOn(updateCurrentAccountMock, 'save')
       .mockRejectedValueOnce(error);
 
     simulateValidSubmit(sut);

@@ -1,16 +1,17 @@
 import {faker} from '@faker-js/faker';
 import {UnexpectedError} from '../../../domain/errors';
+import {mockAccountModel} from '../../../domain/test';
 import {SetStorageMock} from '../../test';
-import {LocalSaveAccessTokenUseCase} from './local-save-access-token.usecase';
+import {LocalUpdateCurrentAccountUseCase} from './local-update-current-account.usecase';
 
 type SutTypes = {
-  sut: LocalSaveAccessTokenUseCase;
+  sut: LocalUpdateCurrentAccountUseCase;
   setStorageMock: SetStorageMock;
 };
 
 function makeSut(): SutTypes {
   const setStorageMock = new SetStorageMock();
-  const sut = new LocalSaveAccessTokenUseCase(setStorageMock);
+  const sut = new LocalUpdateCurrentAccountUseCase(setStorageMock);
 
   return {
     sut,
@@ -18,18 +19,18 @@ function makeSut(): SutTypes {
   };
 }
 
-describe('LocalSaveAccessTokenUseCase', () => {
+describe('LocalUpdateCurrentAccountUseCase', () => {
   it('Should call SetStorage with correct value', async () => {
     const {sut, setStorageMock} = makeSut();
-    const accessToken = faker.datatype.uuid();
-    await sut.save(accessToken);
-    expect(setStorageMock.key).toBe('accessToken');
-    expect(setStorageMock.value).toBe(accessToken);
+    const account = mockAccountModel();
+    await sut.save(account);
+    expect(setStorageMock.key).toBe('account');
+    expect(setStorageMock.value).toBe(JSON.stringify(account));
   });
 
   it('Should throw if accessToken is falsy', () => {
     const {sut} = makeSut();
-    const response = sut.save('');
+    const response = sut.save(undefined);
     expect(response).rejects.toThrow(new UnexpectedError());
   });
 });

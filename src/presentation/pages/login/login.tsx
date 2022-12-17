@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {
   IAuthentication,
-  ISaveAccessToken,
+  IUpdateCurrentAccount,
 } from '../../../domain/useCases';
 import {Footer} from '../../components/footer/footer';
 import {FormStatus} from '../../components/form-status/form-status';
@@ -16,13 +16,13 @@ import './login-styles.scss';
 type Props = {
   validation: IValidation;
   authentication: IAuthentication;
-  saveAccessToken: ISaveAccessToken;
+  updateCurrentAccount: IUpdateCurrentAccount;
 };
 
 export function Login({
   validation,
   authentication,
-  saveAccessToken,
+  updateCurrentAccount,
 }: Props) {
   const [state, setState] = useState({
     isLoading: false,
@@ -70,7 +70,7 @@ export function Login({
         password: state.password,
       });
 
-      await saveAccessToken.save(response?.accessToken);
+      await updateCurrentAccount.save(response);
       navigate('/');
     } catch (error: any) {
       setState({

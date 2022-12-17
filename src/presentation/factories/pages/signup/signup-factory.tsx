@@ -1,6 +1,6 @@
 import {SignUp} from '../../../pages/signup/signup';
 import {makeRemoteAddAccount} from '../../usecases/add-account/remote-add-account-factory';
-import {makeLocalSaveAccessTokenFactory} from '../../usecases/save-acess-token/local-save-access-token-factory';
+import {makeLocalUpdateCurrentAccountFactory} from '../../usecases/update-current-account/local-update-current-account-factory';
 import {makeSignUpValidation} from './signup-validation-factory';
 
 export function makeSignUp() {
@@ -8,7 +8,7 @@ export function makeSignUp() {
     <SignUp
       addAccount={makeRemoteAddAccount()}
       validation={makeSignUpValidation()}
-      saveAccessToken={makeLocalSaveAccessTokenFactory()}
+      updateCurrentAccount={makeLocalUpdateCurrentAccountFactory()}
     />
   );
 }

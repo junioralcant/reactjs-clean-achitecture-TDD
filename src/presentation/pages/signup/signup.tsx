@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {
   IAddAccount,
-  ISaveAccessToken,
+  IUpdateCurrentAccount,
 } from '../../../domain/useCases';
 import {Footer} from '../../components/footer/footer';
 import {FormStatus} from '../../components/form-status/form-status';
@@ -16,13 +16,13 @@ import './signup-styles.scss';
 type Props = {
   validation: IValidation;
   addAccount: IAddAccount;
-  saveAccessToken: ISaveAccessToken;
+  updateCurrentAccount: IUpdateCurrentAccount;
 };
 
 export function SignUp({
   validation,
   addAccount,
-  saveAccessToken,
+  updateCurrentAccount,
 }: Props) {
   const navigate = useNavigate();
 
@@ -93,7 +93,7 @@ export function SignUp({
         passwordConfirmation: state.passwordConfirmation,
       });
 
-      await saveAccessToken.save(response.accessToken);
+      await updateCurrentAccount.save(response);
       navigate('/');
     } catch (error: any) {
       setState({

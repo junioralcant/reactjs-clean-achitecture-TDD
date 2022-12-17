@@ -10,7 +10,7 @@ import {Login} from './login';
 import {
   AuthenticationSpy,
   Helper,
-  SaveAccessTokenMock,
+  UpdateCurrentAccountMock,
   ValidationStub,
 } from '../../test';
 import {InvalidCredentilsError} from '../../../domain/errors';
@@ -19,7 +19,7 @@ import {BrowserRouter} from 'react-router-dom';
 type SutTypes = {
   sut: RenderResult;
   authenticationSpy: AuthenticationSpy;
-  saveAccessTokenMock: SaveAccessTokenMock;
+  updateCurrentAccountMock: UpdateCurrentAccountMock;
 };
 
 type SutParams = {
@@ -29,7 +29,7 @@ type SutParams = {
 function makeSut(params?: SutParams): SutTypes {
   const validationStub = new ValidationStub();
   const authenticationSpy = new AuthenticationSpy();
-  const saveAccessTokenMock = new SaveAccessTokenMock();
+  const updateCurrentAccountMock = new UpdateCurrentAccountMock();
   validationStub.setMessageError(params?.validationError as string);
 
   const sut = render(
@@ -37,7 +37,7 @@ function makeSut(params?: SutParams): SutTypes {
       <Login
         validation={validationStub}
         authentication={authenticationSpy}
-        saveAccessToken={saveAccessTokenMock}
+        updateCurrentAccount={updateCurrentAccountMock}
       />
     </BrowserRouter>
   );
@@ -45,7 +45,7 @@ function makeSut(params?: SutParams): SutTypes {
   return {
     sut,
     authenticationSpy,
-    saveAccessTokenMock,
+    updateCurrentAccountMock,
   };
 }
 
@@ -186,13 +186,14 @@ describe('Login Component', () => {
   });
 
   it('Should call SaveAccessToken on sucess', async () => {
-    const {sut, authenticationSpy, saveAccessTokenMock} = makeSut();
+    const {sut, authenticationSpy, updateCurrentAccountMock} =
+      makeSut();
 
     simulateValidSubmit(sut);
 
     await waitFor(() => {
-      expect(saveAccessTokenMock.accesssToken).toBe(
-        authenticationSpy.account.accessToken
+      expect(updateCurrentAccountMock.account).toEqual(
+        authenticationSpy.account
       );
     });
 
@@ -200,11 +201,11 @@ describe('Login Component', () => {
   });
 
   it('Should present error if SaveAccessToken fails', async () => {
-    const {sut, saveAccessTokenMock} = makeSut();
+    const {sut, updateCurrentAccountMock} = makeSut();
     const error = new InvalidCredentilsError();
 
     jest
-      .spyOn(saveAccessTokenMock, 'save')
+      .spyOn(updateCurrentAccountMock, 'save')
       .mockRejectedValueOnce(error);
 
     simulateValidSubmit(sut);

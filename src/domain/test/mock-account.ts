@@ -1,6 +1,6 @@
-import { AuthenticationParams } from '../useCases';
-import { faker } from '@faker-js/faker';
-import { AccountModel } from '../models';
+import {AuthenticationParams} from '../useCases';
+import {faker} from '@faker-js/faker';
+import {AccountModel} from '../models';
 
 export function mockAuthentication(): AuthenticationParams {
   return {
@@ -12,5 +12,6 @@ export function mockAuthentication(): AuthenticationParams {
 export function mockAccountModel(): AccountModel {
   return {
     accessToken: faker.random.alphaNumeric(5),
+    name: faker.name.firstName(),
   };
 }
