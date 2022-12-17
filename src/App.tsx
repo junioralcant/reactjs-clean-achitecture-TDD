@@ -1,5 +1,5 @@
-import {makeLogin} from './presentation/factories/pages/login/login-factory';
-import {makeSignUp} from './presentation/factories/pages/signup/signup-factory';
+import {makeLogin} from './main/factories/pages/login/login-factory';
+import {makeSignUp} from './main/factories/pages/signup/signup-factory';
 import {Router} from './presentation/router/router';
 import './presentation/styles/global.scss';
 

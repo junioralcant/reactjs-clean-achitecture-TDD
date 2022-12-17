@@ -1,4 +1,4 @@
-import {Login} from '../../../pages/login/login';
+import {Login} from '../../../../presentation/pages/login/login';
 import {makeRemoteAuthentication} from '../../usecases/authentication/remote-authentication-factory';
 import {makeLocalUpdateCurrentAccountFactory} from '../../usecases/update-current-account/local-update-current-account-factory';
 import {makeLoginValidation} from './login-validation-factory';
