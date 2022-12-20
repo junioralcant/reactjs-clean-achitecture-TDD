@@ -11,3 +11,7 @@ export function setCurrentAccountAdapter(
 
   makeLocalStorageAdapterFactory().set('account', account);
 }
+
+export function getCurrentAccountAdapter(): AccountModel {
+  return makeLocalStorageAdapterFactory().get('account');
+}
