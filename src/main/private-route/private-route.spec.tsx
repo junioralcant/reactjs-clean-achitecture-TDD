@@ -1,7 +1,6 @@
 import {render} from '@testing-library/react';
 import {createMemoryHistory} from 'history';
 import {
-  BrowserRouter,
   Route,
   Routes,
   unstable_HistoryRouter as HistoryRouter,
