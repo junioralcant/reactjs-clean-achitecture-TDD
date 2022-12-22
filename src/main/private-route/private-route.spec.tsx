@@ -8,12 +8,6 @@ import {
 } from 'react-router-dom';
 import {PrivateRouter} from './private-route';
 
-const mockedUsedNavigate = jest.fn();
-jest.mock('react-router-dom', () => ({
-  ...(jest.requireActual('react-router-dom') as any),
-  useNavigate: () => mockedUsedNavigate,
-}));
-
 describe('PrivateRoute', () => {
   it('Should redirect to /login if token is empty', () => {
     const history = createMemoryHistory({initialEntries: ['/']});
