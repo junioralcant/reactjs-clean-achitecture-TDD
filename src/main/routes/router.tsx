@@ -7,6 +7,7 @@ import {
 } from '../adapters/current-account-adapter';
 import {MakeLogin} from '../factories/pages/login/login-factory';
 import {MakeSignUp} from '../factories/pages/signup/signup-factory';
+import {PrivateRouter} from '../private-route/private-route';
 
 export function Router() {
   return (
@@ -20,7 +21,14 @@ export function Router() {
         <Routes>
           <Route path="/login" element={<MakeLogin />} />
           <Route path="/signup" element={<MakeSignUp />} />
-          <Route path="/" element={<SurveyList />} />
+          <Route
+            path="/"
+            element={
+              <PrivateRouter>
+                <SurveyList />
+              </PrivateRouter>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </ApiContext.Provider>
