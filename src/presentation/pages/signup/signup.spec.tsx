@@ -12,6 +12,7 @@ import {EmailInUseError} from '../../../domain/errors';
 import {ApiContext} from '../../contexs/api/api-context';
 import {AccountModel} from '../../../domain/models';
 import {BrowserRouter} from 'react-router-dom';
+import {getCurrentAccountAdapter} from '../../../main/adapters/current-account-adapter';
 
 type SutTypes = {
   sut: RenderResult;
@@ -31,7 +32,10 @@ function makeSut(params?: SutParams): SutTypes {
   validationStub.errorMessage = params?.validationError as string;
   const sut = render(
     <ApiContext.Provider
-      value={{setCurrentAccount: setCurrentAccountMock}}
+      value={{
+        setCurrentAccount: setCurrentAccountMock,
+        getCurrentAccount: getCurrentAccountAdapter,
+      }}
     >
       <BrowserRouter>
         <SignUp

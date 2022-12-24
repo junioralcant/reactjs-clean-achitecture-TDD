@@ -12,6 +12,7 @@ import {InvalidCredentilsError} from '../../../domain/errors';
 import {BrowserRouter} from 'react-router-dom';
 import {ApiContext} from '../../contexs/api/api-context';
 import {AccountModel} from '../../../domain/models';
+import {getCurrentAccountAdapter} from '../../../main/adapters/current-account-adapter';
 
 type SutTypes = {
   sut: RenderResult;
@@ -31,7 +32,10 @@ function makeSut(params?: SutParams): SutTypes {
 
   const sut = render(
     <ApiContext.Provider
-      value={{setCurrentAccount: setCurrentAccountMock}}
+      value={{
+        setCurrentAccount: setCurrentAccountMock,
+        getCurrentAccount: getCurrentAccountAdapter,
+      }}
     >
       <BrowserRouter>
         <Login
