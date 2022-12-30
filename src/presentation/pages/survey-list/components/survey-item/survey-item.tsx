@@ -8,10 +8,14 @@ type Props = {
 };
 
 export function SurveyItem({survey}: Props) {
+  const iconName = survey.didAnswer
+    ? IconName.thumbUp
+    : IconName.thumbDown;
+
   return (
     <li className="surveyItemWrap">
       <div className="surveyContent">
-        <Icon className="iconWrap" iconName={IconName.thumbUp} />
+        <Icon className="iconWrap" iconName={iconName} />
         <time>
           <span data-testid="day" className="day">
             {survey.date.getDate()}
