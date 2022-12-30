@@ -6,6 +6,7 @@ export function SurveyItemEmpty() {
       <li className="surveyItemEmpty"></li>
       <li className="surveyItemEmpty"></li>
       <li className="surveyItemEmpty"></li>
+      <li className="surveyItemEmpty"></li>
     </>
   );
 }

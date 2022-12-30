@@ -1,5 +1,6 @@
 import {Footer} from '../../components/footer/footer';
 import {Header} from '../../components/header/header';
+import {SurveyItemEmpty} from './components/survey-item-empty/survey-item-empty';
 import './survey-list-styles.scss';
 
 export function SurveyList() {
@@ -9,10 +10,8 @@ export function SurveyList() {
 
       <div className="contenWrap">
         <h2>Enquetes</h2>
-        <ul>
-          <li></li>
-          <li></li>
-          <li></li>
+        <ul data-testid="survey-list">
+          <SurveyItemEmpty />
         </ul>
       </div>
 
