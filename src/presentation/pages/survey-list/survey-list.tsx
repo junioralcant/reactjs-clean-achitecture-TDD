@@ -1,9 +1,22 @@
+import {ILoadSurveyList} from '../../../domain/useCases';
 import {Footer} from '../../components/footer/footer';
 import {Header} from '../../components/header/header';
 import {SurveyItemEmpty} from './components/survey-item-empty/survey-item-empty';
 import './survey-list-styles.scss';
+import {useEffect} from 'react';
 
-export function SurveyList() {
+type Props = {
+  loadSurveyList: ILoadSurveyList;
+};
+
+export function SurveyList({loadSurveyList}: Props) {
+  useEffect(() => {
+    async function loadSurvey() {
+      await loadSurveyList.loadAll();
+    }
+
+    loadSurvey();
+  }, []);
   return (
     <div className="surveyList">
       <Header />
