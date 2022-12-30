@@ -15,7 +15,12 @@ export function Icon({iconName, className}: Props) {
 
   return (
     <div className={`iconWrap ${iconColor} ${className}`}>
-      <img className="icon" src={iconName} alt="" />
+      <img
+        data-testid="icon"
+        className="icon"
+        src={iconName}
+        alt=""
+      />
     </div>
   );
 }
