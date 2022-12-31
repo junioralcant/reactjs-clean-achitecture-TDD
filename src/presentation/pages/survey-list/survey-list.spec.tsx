@@ -1,4 +1,5 @@
 import {render, screen, waitFor} from '@testing-library/react';
+import {UnexpectedError} from '../../../domain/errors';
 import {SurveyModel} from '../../../domain/models';
 import {mockSurveyListModel} from '../../../domain/test';
 import {ILoadSurveyList} from '../../../domain/useCases';
@@ -17,8 +18,9 @@ type SutTypes = {
   loadSurveyListSpy: LoadSurveyListSpy;
 };
 
-function makeSut(): SutTypes {
-  const loadSurveyListSpy = new LoadSurveyListSpy();
+function makeSut(
+  loadSurveyListSpy = new LoadSurveyListSpy()
+): SutTypes {
   render(<SurveyList loadSurveyList={loadSurveyListSpy} />);
   return {
     loadSurveyListSpy,
@@ -46,6 +48,25 @@ describe('SurveyzList Component', () => {
       expect(
         surveyList.querySelectorAll('li.surveyItemWrap').length
       ).toBe(3)
+    );
+  });
+
+  it('Should render error on failure', async () => {
+    const loadSurveyListSpy = new LoadSurveyListSpy();
+    const error = new UnexpectedError();
+    jest
+      .spyOn(loadSurveyListSpy, 'loadAll')
+      .mockRejectedValueOnce(error);
+
+    makeSut(loadSurveyListSpy);
+
+    await waitFor(() =>
+      expect(
+        screen.queryByTestId('survey-list')
+      ).not.toBeInTheDocument()
+    );
+    expect(screen.getByTestId('error')).toHaveTextContent(
+      error.message
     );
   });
 });
