@@ -7,6 +7,7 @@ import {
 } from '../adapters/current-account-adapter';
 import {MakeLogin} from '../factories/pages/login/login-factory';
 import {MakeSignUp} from '../factories/pages/signup/signup-factory';
+import {MakeSurveyList} from '../factories/pages/survey-list/survey-list-factory';
 import {PrivateRouter} from '../private-route/private-route';
 
 export function Router() {
@@ -25,7 +26,7 @@ export function Router() {
             path="/"
             element={
               <PrivateRouter>
-                <SurveyList />
+                <MakeSurveyList />
               </PrivateRouter>
             }
           />
