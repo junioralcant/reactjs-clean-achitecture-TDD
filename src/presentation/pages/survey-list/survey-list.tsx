@@ -16,6 +16,7 @@ export function SurveyList({loadSurveyList}: Props) {
   const [state, setState] = useState({
     surveys: [] as SurveyModel[] | undefined,
     error: '',
+    reload: false,
   });
 
   useEffect(() => {
@@ -30,7 +31,7 @@ export function SurveyList({loadSurveyList}: Props) {
     }
 
     loadSurvey();
-  }, []);
+  }, [state.reload]);
 
   return (
     <div className="surveyList">
