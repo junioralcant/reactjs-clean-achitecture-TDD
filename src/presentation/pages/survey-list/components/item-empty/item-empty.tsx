@@ -1,4 +1,4 @@
-import './survey-item-empty-styles.scss';
+import './item-empty-styles.scss';
 
 export function SurveyItemEmpty() {
   return (

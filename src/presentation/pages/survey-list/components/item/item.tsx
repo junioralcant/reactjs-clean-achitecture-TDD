@@ -1,7 +1,7 @@
 import {SurveyModel} from '../../../../../domain/models';
 import {Icon, IconName} from '../../../../components/icon/icon';
 
-import './survey-item-styles.scss';
+import './item-styles.scss';
 
 type Props = {
   survey: SurveyModel;

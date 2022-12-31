@@ -1,7 +1,7 @@
 import {render, screen} from '@testing-library/react';
 import {mockSurveyModel} from '../../../../../domain/test';
 import {IconName} from '../../../../components/icon/icon';
-import {SurveyItem} from './survey-item';
+import {SurveyItem} from './item';
 
 function makeSut(survey = mockSurveyModel()) {
   render(<SurveyItem survey={survey} />);

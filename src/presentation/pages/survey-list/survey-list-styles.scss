@@ -24,24 +24,6 @@
             margin-bottom: 24px;
         }
 
-        ul {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            justify-content: space-between;
 
-            
-        }
     }
-} 
-
-
-@media only screen and (max-width: 600px) {
-    .surveyList {
-        .contenWrap {
-            ul {
-                flex-direction: column;
-            }
-        }
-    } 
 }
