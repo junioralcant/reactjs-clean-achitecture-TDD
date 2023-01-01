@@ -10,9 +10,13 @@ import {
 export class AuthorizeHttpGetClientDecorator
   implements IHttpGetClient
 {
-  constructor(private readonly getStorage: IGetStorage) {}
+  constructor(
+    private readonly getStorage: IGetStorage,
+    private readonly httpGetClient: IHttpGetClient
+  ) {}
   async get(params: HttpGetParams): Promise<HttpReponse> {
     this.getStorage.get('account');
+    this.httpGetClient.get(params);
     return {
       statusCode: HttpStatusCode.ok,
       body: undefined,
