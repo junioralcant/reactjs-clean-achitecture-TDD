@@ -10,6 +10,7 @@ import {
 export function mockGetRequest(): HttpGetParams {
   return {
     url: faker.internet.url(),
+    headers: faker.datatype.json(),
   };
 }
 
