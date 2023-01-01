@@ -26,7 +26,9 @@ export class AxiosHttpClient
     let axiosResponse: AxiosResponse;
 
     try {
-      axiosResponse = await axios.get(params.url);
+      axiosResponse = await axios.get(params.url, {
+        headers: params.headers,
+      });
     } catch (error: any) {
       axiosResponse = error.response;
     }
