@@ -14,13 +14,16 @@ export function mockGetRequest(): HttpGetParams {
   };
 }
 
-export class HttpGetClientSpy<R> implements IHttpGetClient<R> {
+export class HttpGetClientSpy<R = any> implements IHttpGetClient<R> {
   url: string = '';
+  headers?: any;
   response: HttpReponse<R> = {
     statusCode: HttpStatusCode.ok,
   };
+
   async get(params: HttpGetParams): Promise<HttpReponse<R>> {
     this.url = params.url;
+    this.headers = params.headers;
     return this.response;
   }
 }
