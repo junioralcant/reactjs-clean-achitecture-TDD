@@ -10,10 +10,8 @@ export function ErrorList() {
   }
 
   return (
-    <div>
-      <span className="errorWrap" data-testid="error">
-        {state.error}
-      </span>
+    <div className="errorWrap">
+      <span data-testid="error">{state.error}</span>
       <button onClick={reload} data-testid="reload">
         Tentar novamente
       </button>
