@@ -26,10 +26,8 @@ export class AuthorizeHttpGetClientDecorator
         }),
       });
     }
-    await this.httpGetClient.get(params);
-    return {
-      statusCode: HttpStatusCode.ok,
-      body: undefined,
-    };
+    const httpResponse = await this.httpGetClient.get(params);
+
+    return httpResponse;
   }
 }
