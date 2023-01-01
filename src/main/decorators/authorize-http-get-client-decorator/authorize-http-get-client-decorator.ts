@@ -15,8 +15,18 @@ export class AuthorizeHttpGetClientDecorator
     private readonly httpGetClient: IHttpGetClient
   ) {}
   async get(params: HttpGetParams): Promise<HttpReponse> {
-    this.getStorage.get('account');
-    this.httpGetClient.get(params);
+    const account = this.getStorage.get('account');
+    // console.log(account);
+
+    // decorator in action
+    if (account?.accessToken) {
+      Object.assign(params, {
+        headers: {
+          'x-access-token': account.accessToken,
+        },
+      });
+    }
+    await this.httpGetClient.get(params);
     return {
       statusCode: HttpStatusCode.ok,
       body: undefined,
