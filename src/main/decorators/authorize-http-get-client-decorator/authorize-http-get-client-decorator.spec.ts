@@ -5,7 +5,6 @@ import {
   mockGetRequest,
 } from '../../../data/test/mock-http/mock-http-get';
 import {GetStorageSpy} from '../../../data/test';
-import {HttpGetParams} from '../../../data/protocols/http';
 import {mockAccountModel} from '../../../domain/test';
 
 type SutTypes = {

@@ -1,15 +1,16 @@
 import {UnexpectedError} from '../../../domain/errors';
-import {SurveyModel} from '../../../domain/models';
 import {ILoadSurveyList} from '../../../domain/useCases';
 import {HttpStatusCode, IHttpGetClient} from '../../protocols/http';
 
 export class RemoteLoadSurveyList implements ILoadSurveyList {
   constructor(
     private readonly url: string,
-    private readonly httpGetClient: IHttpGetClient<SurveyModel[]>
+    private readonly httpGetClient: IHttpGetClient<
+      RemoteLoadSurveyList.Model[]
+    >
   ) {}
 
-  async loadAll(): Promise<SurveyModel[] | undefined> {
+  async loadAll(): Promise<ILoadSurveyList.Model[] | undefined> {
     const response = await this.httpGetClient.get({url: this.url});
     switch (response.statusCode) {
       case HttpStatusCode.ok:
@@ -20,4 +21,8 @@ export class RemoteLoadSurveyList implements ILoadSurveyList {
         throw new UnexpectedError();
     }
   }
+}
+
+export namespace RemoteLoadSurveyList {
+  export type Model = ILoadSurveyList.Model;
 }

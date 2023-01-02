@@ -1,5 +1,5 @@
 import {useContext} from 'react';
-import {SurveyModel} from '../../../../../domain/models';
+import {ILoadSurveyList} from '../../../../../domain/useCases';
 import {CreateContextSurvey} from '../contex/contex';
 import {SurveyItemEmpty} from '../item-empty/item-empty';
 import {SurveyItem} from '../item/item';
@@ -11,7 +11,7 @@ export function ListItem() {
   return (
     <ul className="listWrap" data-testid="survey-list">
       {state.surveys?.length ? (
-        state.surveys.map((survey: SurveyModel) => (
+        state.surveys.map((survey: ILoadSurveyList.Model) => (
           <SurveyItem key={survey.id} survey={survey} />
         ))
       ) : (

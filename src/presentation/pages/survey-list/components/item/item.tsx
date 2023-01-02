@@ -1,10 +1,10 @@
-import {SurveyModel} from '../../../../../domain/models';
+import {ILoadSurveyList} from '../../../../../domain/useCases';
 import {Icon, IconName} from '../../../../components/icon/icon';
 
 import './item-styles.scss';
 
 type Props = {
-  survey: SurveyModel;
+  survey: ILoadSurveyList.Model;
 };
 
 export function SurveyItem({survey}: Props) {

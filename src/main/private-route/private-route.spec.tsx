@@ -6,13 +6,10 @@ import {
   Routes,
   unstable_HistoryRouter as HistoryRouter,
 } from 'react-router-dom';
-import {mockAccountModel} from '../../domain/test';
+import {AuthenticationSpy, mockAccountModel} from '../../domain/test';
 import {ApiContext} from '../../presentation/contexs/api/api-context';
 import {Login} from '../../presentation/pages/login/login';
-import {
-  AuthenticationSpy,
-  ValidationStub,
-} from '../../presentation/test';
+import {ValidationStub} from '../../presentation/test';
 import {PrivateRouter} from './private-route';
 
 type SutType = {

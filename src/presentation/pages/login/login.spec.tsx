@@ -6,16 +6,17 @@ import {
 } from '@testing-library/react';
 import {faker} from '@faker-js/faker';
 import {Login} from './login';
-import {AuthenticationSpy, Helper, ValidationStub} from '../../test';
+import {Helper, ValidationStub} from '../../test';
 import {InvalidCredentilsError} from '../../../domain/errors';
 import {BrowserRouter} from 'react-router-dom';
 import {ApiContext} from '../../contexs/api/api-context';
-import {AccountModel} from '../../../domain/models';
 import {getCurrentAccountAdapter} from '../../../main/adapters/current-account-adapter';
+import {IAuthentication} from '../../../domain/useCases';
+import {AuthenticationSpy} from '../../../domain/test';
 
 type SutTypes = {
   authenticationSpy: AuthenticationSpy;
-  setCurrentAccountMock(account: AccountModel): void;
+  setCurrentAccountMock(account: IAuthentication.Model): void;
 };
 
 type SutParams = {

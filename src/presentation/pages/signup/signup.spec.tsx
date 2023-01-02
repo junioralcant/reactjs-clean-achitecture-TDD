@@ -5,17 +5,18 @@ import {
   waitFor,
 } from '@testing-library/react';
 import {faker} from '@faker-js/faker';
-import {AddAccountSpy, Helper, ValidationStub} from '../../test';
+import {Helper, ValidationStub} from '../../test';
 import {SignUp} from './signup';
 import {EmailInUseError} from '../../../domain/errors';
 import {ApiContext} from '../../contexs/api/api-context';
-import {AccountModel} from '../../../domain/models';
 import {BrowserRouter} from 'react-router-dom';
 import {getCurrentAccountAdapter} from '../../../main/adapters/current-account-adapter';
+import {IAddAccount} from '../../../domain/useCases';
+import {AddAccountSpy} from '../../../domain/test/mock-add-account';
 
 type SutTypes = {
   addAccountSpy: AddAccountSpy;
-  setCurrentAccountMock(account: AccountModel): void;
+  setCurrentAccountMock(account: IAddAccount.Model): void;
 };
 
 type SutParams = {

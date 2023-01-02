@@ -5,7 +5,6 @@ import {
   waitFor,
 } from '@testing-library/react';
 import {UnexpectedError} from '../../../domain/errors';
-import {SurveyModel} from '../../../domain/models';
 import {mockSurveyListModel} from '../../../domain/test';
 import {ILoadSurveyList} from '../../../domain/useCases';
 import {SurveyList} from './survey-list';
@@ -13,7 +12,7 @@ import {SurveyList} from './survey-list';
 class LoadSurveyListSpy implements ILoadSurveyList {
   callsCount = 0;
   surveys = mockSurveyListModel();
-  async loadAll(): Promise<SurveyModel[] | undefined> {
+  async loadAll(): Promise<ILoadSurveyList.Model[] | undefined> {
     this.callsCount++;
     return this.surveys;
   }
