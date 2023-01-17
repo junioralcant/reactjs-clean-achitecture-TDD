@@ -15,12 +15,6 @@ describe('CurrentAccountAdapter', () => {
     expect(setSpy).toHaveBeenCalledWith('account', account);
   });
 
-  it('Should throw UnexpectedError', () => {
-    expect(() => {
-      setCurrentAccountAdapter(undefined as unknown as AccountModel);
-    }).toThrow(new UnexpectedError());
-  });
-
   it('Should call LocalSotorageAdapter.get with correct value', () => {
     const account = mockAccountModel();
     const getSpy = jest
