@@ -1,8 +1,4 @@
-import React, {
-  AnchorHTMLAttributes,
-  DOMAttributes,
-  useContext,
-} from 'react';
+import React, {useContext} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {ApiContext} from '../../contexs/api/api-context';
 import {Logo} from '../logo/logo';
