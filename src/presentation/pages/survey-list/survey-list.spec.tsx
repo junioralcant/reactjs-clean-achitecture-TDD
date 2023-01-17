@@ -5,8 +5,12 @@ import {
   waitFor,
 } from '@testing-library/react';
 import {UnexpectedError} from '../../../domain/errors';
-import {mockSurveyListModel} from '../../../domain/test';
+import {
+  mockAccountModel,
+  mockSurveyListModel,
+} from '../../../domain/test';
 import {ILoadSurveyList} from '../../../domain/useCases';
+import {ApiContext} from '../../contexs/api/api-context';
 import {SurveyList} from './survey-list';
 
 class LoadSurveyListSpy implements ILoadSurveyList {
@@ -22,10 +26,27 @@ type SutTypes = {
   loadSurveyListSpy: LoadSurveyListSpy;
 };
 
+const mockedUsedNavigate = jest.fn();
+jest.mock('react-router-dom', () => ({
+  ...(jest.requireActual('react-router-dom') as any),
+  useNavigate: () => mockedUsedNavigate,
+}));
+
 function makeSut(
   loadSurveyListSpy = new LoadSurveyListSpy()
 ): SutTypes {
-  render(<SurveyList loadSurveyList={loadSurveyListSpy} />);
+  const setCurrentAccountMock = jest.fn();
+
+  render(
+    <ApiContext.Provider
+      value={{
+        setCurrentAccount: setCurrentAccountMock,
+        getCurrentAccount: mockAccountModel,
+      }}
+    >
+      <SurveyList loadSurveyList={loadSurveyListSpy} />
+    </ApiContext.Provider>
+  );
   return {
     loadSurveyListSpy,
   };
