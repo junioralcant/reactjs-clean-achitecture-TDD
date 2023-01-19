@@ -5,6 +5,8 @@ import {
   waitFor,
 } from '@testing-library/react';
 import {UnexpectedError} from '../../../domain/errors';
+import {AccessDeniedError} from '../../../domain/errors/access-denied-error';
+import {AccountModel} from '../../../domain/models';
 import {
   mockAccountModel,
   mockSurveyListModel,
@@ -24,6 +26,7 @@ class LoadSurveyListSpy implements ILoadSurveyList {
 
 type SutTypes = {
   loadSurveyListSpy: LoadSurveyListSpy;
+  setCurrentAccountMock: (account: AccountModel) => void;
 };
 
 const mockedUsedNavigate = jest.fn();
@@ -49,6 +52,7 @@ function makeSut(
   );
   return {
     loadSurveyListSpy,
+    setCurrentAccountMock,
   };
 }
 
@@ -76,7 +80,7 @@ describe('SurveyzList Component', () => {
     );
   });
 
-  it('Should render error on failure', async () => {
+  it('Should render error on UnexpectedError', async () => {
     const loadSurveyListSpy = new LoadSurveyListSpy();
     const error = new UnexpectedError();
     jest
@@ -93,6 +97,21 @@ describe('SurveyzList Component', () => {
     expect(screen.getByTestId('error')).toHaveTextContent(
       error.message
     );
+  });
+
+  it('Should logout on AccessDeniedError', async () => {
+    const loadSurveyListSpy = new LoadSurveyListSpy();
+    const error = new AccessDeniedError();
+    jest
+      .spyOn(loadSurveyListSpy, 'loadAll')
+      .mockRejectedValueOnce(error);
+
+    const {setCurrentAccountMock} = makeSut(loadSurveyListSpy);
+
+    await waitFor(() => {
+      expect(setCurrentAccountMock).toHaveBeenCalledWith(undefined);
+    });
+    expect(mockedUsedNavigate).toHaveBeenCalledWith('/login');
   });
 
   it('Should call LoadSurveyList on realod ', async () => {
