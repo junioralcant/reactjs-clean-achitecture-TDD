@@ -5,8 +5,12 @@ import {Logo} from '../logo/logo';
 import './header-styles.scss';
 
 export function Header() {
-  const {setCurrentAccount} = useContext(ApiContext);
+  const {setCurrentAccount, getCurrentAccount} =
+    useContext(ApiContext);
+
   const navigate = useNavigate();
+
+  const account = getCurrentAccount();
 
   function logout(
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
@@ -20,7 +24,7 @@ export function Header() {
       <div className="headerContent">
         <Logo />
         <div className="logoutWrap">
-          <span>Rodrigo</span>
+          <span data-testid="username">{account.name}</span>
           <a data-testid="logout" href="#" onClick={logout}>
             Sair
           </a>
