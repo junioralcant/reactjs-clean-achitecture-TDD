@@ -14,14 +14,14 @@ type SutTypes = {
   setCurrentAccountMock: (account: AccountModel) => void;
 };
 
-function makeSut(): SutTypes {
+function makeSut(account = mockAccountModel()): SutTypes {
   const setCurrentAccountMock = jest.fn();
 
   render(
     <ApiContext.Provider
       value={{
         setCurrentAccount: setCurrentAccountMock,
-        getCurrentAccount: mockAccountModel,
+        getCurrentAccount: () => account,
       }}
     >
       <Header />
@@ -38,5 +38,13 @@ describe('Header Component', () => {
     fireEvent.click(screen.getByTestId('logout'));
     expect(setCurrentAccountMock).toHaveBeenCalledWith(undefined);
     expect(mockedUsedNavigate).toHaveBeenCalledWith('/login');
+  });
+
+  it('Should reder username correctly', () => {
+    const account = mockAccountModel();
+    makeSut(account);
+    expect(screen.getByTestId('username')).toHaveTextContent(
+      account.name
+    );
   });
 });
