@@ -1,5 +1,6 @@
 import {faker} from '@faker-js/faker';
 import {UnexpectedError} from '../../../domain/errors';
+import {AccessDeniedError} from '../../../domain/errors/access-denied-error';
 import {mockSurveyListModel} from '../../../domain/test';
 import {HttpStatusCode} from '../../protocols/http';
 import {HttpGetClientSpy} from '../../test';
@@ -30,13 +31,13 @@ describe('RemoteLoadSurveyListUseCase', () => {
     expect(httpGetClientSpy.url).toBe(url);
   });
 
-  it('Should throw UnexpectedError if HttpGetClient returns 403', async () => {
+  it('Should throw AccessDeniedError if HttpGetClient returns 403', async () => {
     const {sut, httpGetClientSpy} = makeSut();
     httpGetClientSpy.response = {
       statusCode: HttpStatusCode.forbidden,
     };
     const promise = sut.loadAll();
-    await expect(promise).rejects.toThrow(new UnexpectedError());
+    await expect(promise).rejects.toThrow(new AccessDeniedError());
   });
 
   it('Should throw UnexpectedError if HttpGetClient returns 404', async () => {
