@@ -8,5 +8,16 @@ export type AddAccountParams = {
 };
 
 export interface IAddAccount {
-  add(params: AddAccountParams): Promise<AccountModel>;
+  add(params: IAddAccount.Params): Promise<IAddAccount.Model>;
+}
+
+export namespace IAddAccount {
+  export type Params = {
+    name: string;
+    email: string;
+    password: string;
+    passwordConfirmation: string;
+  };
+
+  export type Model = AccountModel;
 }

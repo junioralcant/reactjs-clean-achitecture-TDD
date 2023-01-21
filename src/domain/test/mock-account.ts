@@ -1,16 +1,9 @@
-import { AuthenticationParams } from '../useCases';
-import { faker } from '@faker-js/faker';
-import { AccountModel } from '../models';
+import {IAuthentication} from '../useCases';
+import {faker} from '@faker-js/faker';
 
-export function mockAuthentication(): AuthenticationParams {
-  return {
-    email: faker.internet.email(),
-    password: faker.internet.password(),
-  };
-}
-
-export function mockAccountModel(): AccountModel {
+export function mockAccountModel(): IAuthentication.Model {
   return {
     accessToken: faker.random.alphaNumeric(5),
+    name: faker.name.firstName(),
   };
 }

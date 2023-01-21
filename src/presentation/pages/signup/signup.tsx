@@ -1,14 +1,12 @@
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {
-  IAddAccount,
-  ISaveAccessToken,
-} from '../../../domain/useCases';
+import {IAddAccount} from '../../../domain/useCases';
 import {Footer} from '../../components/footer/footer';
 import {FormStatus} from '../../components/form-status/form-status';
 import {Input} from '../../components/input/input';
 import {LoginHeader} from '../../components/login-header/login-header';
 import {SubmitButton} from '../../components/submit-button/submit-button';
+import {ApiContext} from '../../contexs/api/api-context';
 import {CreateContextForm} from '../../contexs/form/form-context';
 import {IValidation} from '../../protocols/validation';
 import './signup-styles.scss';
@@ -16,15 +14,11 @@ import './signup-styles.scss';
 type Props = {
   validation: IValidation;
   addAccount: IAddAccount;
-  saveAccessToken: ISaveAccessToken;
 };
 
-export function SignUp({
-  validation,
-  addAccount,
-  saveAccessToken,
-}: Props) {
+export function SignUp({validation, addAccount}: Props) {
   const navigate = useNavigate();
+  const {setCurrentAccount} = useContext(ApiContext);
 
   const [state, setState] = useState({
     isLoading: false,
@@ -93,7 +87,7 @@ export function SignUp({
         passwordConfirmation: state.passwordConfirmation,
       });
 
-      await saveAccessToken.save(response.accessToken);
+      setCurrentAccount(response);
       navigate('/');
     } catch (error: any) {
       setState({

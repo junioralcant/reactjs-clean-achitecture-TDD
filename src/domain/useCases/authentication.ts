@@ -1,12 +1,16 @@
-import { AccountModel } from '../models';
-
-export type AuthenticationParams = {
-  email: string;
-  password: string;
-};
+import {AccountModel} from '../models';
 
 export interface IAuthentication {
   auth(
-    params: AuthenticationParams
-  ): Promise<AccountModel | undefined>;
+    params: IAuthentication.Params
+  ): Promise<IAuthentication.Model | undefined>;
+}
+
+export namespace IAuthentication {
+  export type Params = {
+    email: string;
+    password: string;
+  };
+
+  export type Model = AccountModel;
 }

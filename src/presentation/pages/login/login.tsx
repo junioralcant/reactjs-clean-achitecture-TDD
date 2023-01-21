@@ -1,14 +1,12 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {
-  IAuthentication,
-  ISaveAccessToken,
-} from '../../../domain/useCases';
+import {IAuthentication} from '../../../domain/useCases';
 import {Footer} from '../../components/footer/footer';
 import {FormStatus} from '../../components/form-status/form-status';
 import {Input} from '../../components/input/input';
 import {LoginHeader} from '../../components/login-header/login-header';
 import {SubmitButton} from '../../components/submit-button/submit-button';
+import {ApiContext} from '../../contexs/api/api-context';
 import {CreateContextForm} from '../../contexs/form/form-context';
 import {IValidation} from '../../protocols/validation';
 import './login-styles.scss';
@@ -16,14 +14,9 @@ import './login-styles.scss';
 type Props = {
   validation: IValidation;
   authentication: IAuthentication;
-  saveAccessToken: ISaveAccessToken;
 };
 
-export function Login({
-  validation,
-  authentication,
-  saveAccessToken,
-}: Props) {
+export function Login({validation, authentication}: Props) {
   const [state, setState] = useState({
     isLoading: false,
     isFormInvalid: true,
@@ -33,6 +26,8 @@ export function Login({
     passwordError: '',
     mainError: '',
   });
+
+  const {setCurrentAccount} = useContext(ApiContext);
 
   const navigate = useNavigate();
 
@@ -70,7 +65,7 @@ export function Login({
         password: state.password,
       });
 
-      await saveAccessToken.save(response?.accessToken);
+      setCurrentAccount(response);
       navigate('/');
     } catch (error: any) {
       setState({
