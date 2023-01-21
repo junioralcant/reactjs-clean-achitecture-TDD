@@ -4,19 +4,18 @@ import {Header} from '../../components/header/header';
 import {useEffect, useState, useContext} from 'react';
 import {CreateContextSurvey} from './components/contex/contex';
 import {ListItem} from './components/list/list';
-import './survey-list-styles.scss';
 import {ErrorList} from './components/erro/error';
-import {AccessDeniedError} from '../../../domain/errors/access-denied-error';
-import {ApiContext} from '../../contexs/api/api-context';
-import {useNavigate} from 'react-router-dom';
+import {useErrorHandler} from '../../hooks/use-error-handler';
+import './survey-list-styles.scss';
 
 type Props = {
   loadSurveyList: ILoadSurveyList;
 };
 
 export function SurveyList({loadSurveyList}: Props) {
-  const navigate = useNavigate();
-  const {setCurrentAccount} = useContext(ApiContext);
+  const handleErrorHook = useErrorHandler((error: Error) => {
+    setState({...state, error: error.message});
+  });
 
   const [state, setState] = useState({
     surveys: [] as ILoadSurveyList.Model[] | undefined,
@@ -31,12 +30,7 @@ export function SurveyList({loadSurveyList}: Props) {
 
         setState({...state, surveys});
       } catch (error: any) {
-        if (error instanceof AccessDeniedError) {
-          setCurrentAccount(undefined);
-          navigate('/login');
-        } else {
-          setState({...state, error: error.message});
-        }
+        handleErrorHook(error);
       }
     }
 
