@@ -12,7 +12,7 @@ type SutTypes = {
   httpGetClientSpy: HttpGetClientSpy;
 };
 
-function makeSut(url: string): SutTypes {
+function makeSut(url = faker.internet.url()): SutTypes {
   const httpGetClientSpy = new HttpGetClientSpy();
   const sut = new RemoteLoadSurveyResult(url, httpGetClientSpy);
 
@@ -31,8 +31,7 @@ describe('RemoteLoadSurveyResult', () => {
   });
 
   it('Should throw AccessDeniedError if HttpGetClient return 403', async () => {
-    const url = faker.internet.url();
-    const {sut, httpGetClientSpy} = makeSut(url);
+    const {sut, httpGetClientSpy} = makeSut();
 
     httpGetClientSpy.response = {
       statusCode: HttpStatusCode.forbidden,
@@ -43,8 +42,7 @@ describe('RemoteLoadSurveyResult', () => {
   });
 
   it('Should throw UnexpectError if HttpGetClient return 404', async () => {
-    const url = faker.internet.url();
-    const {sut, httpGetClientSpy} = makeSut(url);
+    const {sut, httpGetClientSpy} = makeSut();
 
     httpGetClientSpy.response = {
       statusCode: HttpStatusCode.notFound,
