@@ -1,27 +1,31 @@
 import {UnexpectedError} from '../../../domain/errors';
 import {AccessDeniedError} from '../../../domain/errors/access-denied-error';
-import {IHttpGetClient} from '../../protocols/http';
+import {HttpStatusCode, IHttpGetClient} from '../../protocols/http';
+import {ILoadSurveyList} from '../../../domain/useCases/load-survey-list';
+import {ILoadSurveyResult} from '../../../domain/useCases/load-survey-result';
 
-export class RemoteLoadSurveyResult {
+export class RemoteLoadSurveyResult implements ILoadSurveyResult {
   constructor(
     private readonly url: string,
-    private readonly httpGetClient: IHttpGetClient
+    private readonly httpGetClient: IHttpGetClient<RemoteLoadSurveyResult.Model>
   ) {}
 
-  async load(): Promise<void> {
+  async load(): Promise<ILoadSurveyResult.Model | undefined> {
     const htttpResponse = await this.httpGetClient.get({
       url: this.url,
     });
 
     switch (htttpResponse.statusCode) {
-      case 403:
+      case HttpStatusCode.forbidden:
         throw new AccessDeniedError();
-      case 404:
-        throw new UnexpectedError();
-      case 500:
-        throw new UnexpectedError();
+      case HttpStatusCode.ok:
+        return htttpResponse.body;
       default:
-        break;
+        throw new UnexpectedError();
     }
   }
+}
+
+export namespace RemoteLoadSurveyResult {
+  export type Model = ILoadSurveyResult.Model;
 }
