@@ -7,6 +7,8 @@ import {
   AccessDeniedError,
 } from '../../../domain/errors';
 
+import {mockSurveyResultModel} from '../../../domain/test';
+
 type SutTypes = {
   sut: RemoteLoadSurveyResult;
   httpGetClientSpy: HttpGetClientSpy;
@@ -61,5 +63,17 @@ describe('RemoteLoadSurveyResult', () => {
 
     const promise = sut.load();
     await expect(promise).rejects.toThrow(new UnexpectedError());
+  });
+
+  it('Should return a SurveyResult on status 200', async () => {
+    const {sut, httpGetClientSpy} = makeSut();
+    const httpResult = mockSurveyResultModel();
+    httpGetClientSpy.response = {
+      statusCode: HttpStatusCode.ok,
+      body: httpResult,
+    };
+
+    const response = await sut.load();
+    expect(response).toEqual(httpResult);
   });
 });
