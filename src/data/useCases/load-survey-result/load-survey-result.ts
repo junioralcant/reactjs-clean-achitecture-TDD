@@ -1,3 +1,4 @@
+import {AccessDeniedError} from '../../../domain/errors/access-denied-error';
 import {IHttpGetClient} from '../../protocols/http';
 
 export class RemoteLoadSurveyResult {
@@ -7,6 +8,15 @@ export class RemoteLoadSurveyResult {
   ) {}
 
   async load(): Promise<void> {
-    this.httpGetClient.get({url: this.url});
+    const htttpResponse = await this.httpGetClient.get({
+      url: this.url,
+    });
+
+    switch (htttpResponse.statusCode) {
+      case 403:
+        throw new AccessDeniedError();
+      default:
+        break;
+    }
   }
 }
