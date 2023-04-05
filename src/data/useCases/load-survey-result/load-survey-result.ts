@@ -1,3 +1,4 @@
+import {UnexpectedError} from '../../../domain/errors';
 import {AccessDeniedError} from '../../../domain/errors/access-denied-error';
 import {IHttpGetClient} from '../../protocols/http';
 
@@ -15,6 +16,8 @@ export class RemoteLoadSurveyResult {
     switch (htttpResponse.statusCode) {
       case 403:
         throw new AccessDeniedError();
+      case 404:
+        throw new UnexpectedError();
       default:
         break;
     }
