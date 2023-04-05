@@ -18,6 +18,8 @@ export class RemoteLoadSurveyResult {
         throw new AccessDeniedError();
       case 404:
         throw new UnexpectedError();
+      case 500:
+        throw new UnexpectedError();
       default:
         break;
     }
