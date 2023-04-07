@@ -1,5 +1,4 @@
 import {faker} from '@faker-js/faker';
-import {ILoadSurveyResult} from '../useCases/load-survey-result';
 import {RemoteLoadSurveyResult} from '../../data/useCases/load-survey-result/load-survey-result';
 
 export function mockSurveyResultModel(): RemoteLoadSurveyResult.Model {
@@ -12,11 +11,13 @@ export function mockSurveyResultModel(): RemoteLoadSurveyResult.Model {
         answer: faker.random.words(),
         count: faker.datatype.number(),
         percent: faker.datatype.number(100),
+        isCurrentAccountAnswer: faker.datatype.boolean(),
       },
       {
         answer: faker.random.words(),
         count: faker.datatype.number(),
         percent: faker.datatype.number(100),
+        isCurrentAccountAnswer: faker.datatype.boolean(),
       },
     ],
   };
