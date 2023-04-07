@@ -1,0 +1,100 @@
+@import '../../styles/colors.scss';
+
+.surveyResult {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+    background-color: $disabledBackground;
+    
+    .contenWrap {
+        display: flex;
+        flex-direction: column;
+        align-self: center;
+        max-width: 800px;
+        width: 100%;
+        flex-grow: 1;
+        padding: 40px;
+        color: $primaryDarck;
+
+        h2 {
+            color: $primaryDarck;        
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .answersList {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            
+            li{
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                background-color: $white;
+                align-items: center;
+                padding: 16px;
+                border-radius: 8px;
+                margin-top: 16px;
+
+                &.active {
+                    border: 2px solid $primaryLight
+                }
+
+                img {
+                    width: 50px;
+                    height: 50px;
+                    object-fit: contain;
+                }
+
+                .answer {
+                    flex-grow: 1;
+                    margin: 0px 16px;
+                    font-size: 20px;
+                }
+
+                .percent {
+                    font-size: 30px;
+                }
+            }
+
+           
+        }
+
+        button {
+            margin-top: 16px;
+        }
+
+        .loadingWrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba($white, 0.8);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            cursor: wait;
+
+            .loading {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                background-color: rgba($black, 0.9);
+                width: 300px;
+                height: 150px;
+                border-radius: 8px;
+                
+                span {
+                    color: $white;
+                    font-size: 16px;
+                    margin-bottom: 8px;
+                    text-transform: lowercase;
+                }
+            }
+        }
+    }
+}

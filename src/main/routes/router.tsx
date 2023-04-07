@@ -1,14 +1,14 @@
 import {Route, BrowserRouter, Routes} from 'react-router-dom';
 import {ApiContext} from '../../presentation/contexs/api/api-context';
-import {SurveyList} from '../../presentation/pages/survey-list/survey-list';
-import {
-  getCurrentAccountAdapter,
-  setCurrentAccountAdapter,
-} from '../adapters/current-account-adapter';
 import {MakeLogin} from '../factories/pages/login/login-factory';
 import {MakeSignUp} from '../factories/pages/signup/signup-factory';
 import {MakeSurveyList} from '../factories/pages/survey-list/survey-list-factory';
 import {PrivateRouter} from '../private-route/private-route';
+import {SurveyResult} from '../../presentation/pages/survey-result/survey-result';
+import {
+  getCurrentAccountAdapter,
+  setCurrentAccountAdapter,
+} from '../adapters/current-account-adapter';
 
 export function Router() {
   return (
@@ -30,6 +30,7 @@ export function Router() {
               </PrivateRouter>
             }
           />
+          <Route path="/surveys" element={<SurveyResult />} />
         </Routes>
       </BrowserRouter>
     </ApiContext.Provider>
