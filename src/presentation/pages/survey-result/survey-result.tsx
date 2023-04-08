@@ -1,13 +1,12 @@
 import FlipMove from 'react-flip-move';
 import {Footer} from '../../components/footer/footer';
-import {Header} from '../../components/header/header';
+import {Loading} from '../../components/loading/loading';
 import './survey-result-styles.scss';
-import {Spinner} from '../../components/spinner/spinner';
 
 export function SurveyResult() {
   return (
     <div className="surveyResult">
-      <Header />
+      {/* <Header /> */}
 
       <div className="contenWrap">
         <h2>Qual sua linguagem favorita?</h2>
@@ -32,12 +31,7 @@ export function SurveyResult() {
 
         <button>Voltar</button>
 
-        <div className="loadingWrap">
-          <div className="loading">
-            <span>Aguarde...</span>
-            <Spinner isNegative />
-          </div>
-        </div>
+        <Loading />
       </div>
       <Footer />
     </div>
