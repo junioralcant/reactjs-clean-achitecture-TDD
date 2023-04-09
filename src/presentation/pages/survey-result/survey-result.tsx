@@ -3,14 +3,23 @@ import {Footer} from '../../components/footer/footer';
 import {Loading} from '../../components/loading/loading';
 import './survey-result-styles.scss';
 import {Calendar} from '../../components/calendar/calendar';
+import {useState} from 'react';
+import {ILoadSurveyResult} from '../../../domain/useCases/load-survey-result';
+import {ErrorList} from '../../components/erro/error';
 
 export function SurveyResult() {
+  const [state] = useState({
+    isLoading: false,
+    error: '',
+    surveyResult: null as unknown as ILoadSurveyResult.Model,
+  });
+
   return (
     <div className="surveyResult">
       {/* <Header /> */}
 
-      <div className="contenWrap">
-        {true && (
+      <div data-testid="survey-result" className="contenWrap">
+        {state.surveyResult && (
           <>
             <hgroup>
               <Calendar date={new Date()} className="calendarWrap" />
@@ -39,7 +48,10 @@ export function SurveyResult() {
           </>
         )}
 
-        {/* <Loading /> */}
+        {state.isLoading && <Loading />}
+        {state.error && (
+          <ErrorList error={state.error} reload={() => {}} />
+        )}
       </div>
       <Footer />
     </div>

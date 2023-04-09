@@ -3,7 +3,7 @@ import './loading-styles.scss';
 
 export function Loading() {
   return (
-    <div className="loadingWrap">
+    <div data-testid="loading" className="loadingWrap">
       <div className="loading">
         <span>Aguarde...</span>
         <Spinner isNegative />
