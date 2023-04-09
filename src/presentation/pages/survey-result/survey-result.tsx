@@ -2,6 +2,7 @@ import FlipMove from 'react-flip-move';
 import {Footer} from '../../components/footer/footer';
 import {Loading} from '../../components/loading/loading';
 import './survey-result-styles.scss';
+import {Calendar} from '../../components/calendar/calendar';
 
 export function SurveyResult() {
   return (
@@ -9,7 +10,10 @@ export function SurveyResult() {
       {/* <Header /> */}
 
       <div className="contenWrap">
-        <h2>Qual sua linguagem favorita?</h2>
+        <hgroup>
+          <Calendar date={new Date()} className="calendarWrap" />
+          <h2>Qual sua linguagem favorita?</h2>
+        </hgroup>
 
         <FlipMove className="answersList">
           <li>
@@ -31,7 +35,7 @@ export function SurveyResult() {
 
         <button>Voltar</button>
 
-        <Loading />
+        {/* <Loading /> */}
       </div>
       <Footer />
     </div>
