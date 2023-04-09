@@ -1,8 +1,18 @@
-import {render, screen} from '@testing-library/react';
+import {render, screen, waitFor} from '@testing-library/react';
 import {SurveyResult} from './survey-result';
+import {LoadSurveyResultSpy} from '../../../domain/test';
 
-function makeSut() {
-  render(<SurveyResult />);
+type SutTypes = {
+  loadSurveyResultSpy: LoadSurveyResultSpy;
+};
+
+function makeSut(): SutTypes {
+  const loadSurveyResultSpy = new LoadSurveyResultSpy();
+  render(<SurveyResult loadSurveyResult={loadSurveyResultSpy} />);
+
+  return {
+    loadSurveyResultSpy,
+  };
 }
 
 describe('SurveyResult Component', () => {
@@ -12,5 +22,12 @@ describe('SurveyResult Component', () => {
     expect(surveyResult.childElementCount).toBe(0);
     expect(screen.queryByTestId('error')).not.toBeInTheDocument();
     expect(screen.queryByTestId('loading')).not.toBeInTheDocument();
+    await waitFor(() => surveyResult);
+  });
+
+  it('Should call LoadSurveyResult', async () => {
+    const {loadSurveyResultSpy} = makeSut();
+    await waitFor(() => screen.getByTestId('survey-result'));
+    expect(loadSurveyResultSpy.callsCount).toBe(1);
   });
 });

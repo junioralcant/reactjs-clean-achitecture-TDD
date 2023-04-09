@@ -1,5 +1,6 @@
 import {faker} from '@faker-js/faker';
 import {RemoteLoadSurveyResult} from '../../data/useCases/load-survey-result/load-survey-result';
+import {ILoadSurveyResult} from '../useCases/load-survey-result';
 
 export function mockSurveyResultModel(): RemoteLoadSurveyResult.Model {
   return {
@@ -21,4 +22,14 @@ export function mockSurveyResultModel(): RemoteLoadSurveyResult.Model {
       },
     ],
   };
+}
+
+export class LoadSurveyResultSpy implements ILoadSurveyResult {
+  callsCount = 0;
+  surveys = mockSurveyResultModel();
+
+  async load(): Promise<ILoadSurveyResult.Model | undefined> {
+    this.callsCount++;
+    return this.surveys;
+  }
 }
