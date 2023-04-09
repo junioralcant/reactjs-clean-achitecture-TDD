@@ -1,4 +1,5 @@
 import {ILoadSurveyList} from '../../../../../domain/useCases';
+import {Calendar} from '../../../../components/calendar/calendar';
 import {Icon, IconName} from '../../../../components/icon/icon';
 
 import './item-styles.scss';
@@ -16,19 +17,7 @@ export function SurveyItem({survey}: Props) {
     <li className="surveyItemWrap">
       <div className="surveyContent">
         <Icon className="iconWrap" iconName={iconName} />
-        <time>
-          <span data-testid="day" className="day">
-            {survey.date.getDate()}
-          </span>
-          <span data-testid="month" className="month">
-            {survey.date
-              .toLocaleString('pt-BR', {month: 'short'})
-              .replace('.', '')}
-          </span>
-          <span data-testid="year" className="year">
-            {survey.date.getFullYear()}
-          </span>
-        </time>
+        <Calendar date={survey.date} className="calendarWrap" />
         <p data-testid="question">{survey.question}</p>
       </div>
       <footer>Ver resultado</footer>
