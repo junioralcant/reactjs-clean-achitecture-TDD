@@ -1,5 +1,7 @@
 
 @import '../../../../styles/colors.scss';
+@import '../../../../styles/animations.scss';
+
 
 .surveyItemEmpty {
     height: 250px;
@@ -52,10 +54,4 @@
     .surveyItemWrap {
         flex-basis: 100%;
     } 
-}
-
-@keyframes shimmer {
-    100% {
-        transform: translateX(100%);
-    }
 }

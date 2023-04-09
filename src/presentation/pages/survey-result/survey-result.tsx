@@ -10,30 +10,34 @@ export function SurveyResult() {
       {/* <Header /> */}
 
       <div className="contenWrap">
-        <hgroup>
-          <Calendar date={new Date()} className="calendarWrap" />
-          <h2>Qual sua linguagem favorita?</h2>
-        </hgroup>
+        {true && (
+          <>
+            <hgroup>
+              <Calendar date={new Date()} className="calendarWrap" />
+              <h2>Qual sua linguagem favorita?</h2>
+            </hgroup>
 
-        <FlipMove className="answersList">
-          <li>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1200px-React-icon.svg.png" />
-            <span className="answer">TypeScript</span>
-            <span className="percent">50%</span>
-          </li>
-          <li className="active">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1200px-React-icon.svg.png" />
-            <span className="answer">TypeScript</span>
-            <span className="percent">50%</span>
-          </li>
-          <li>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1200px-React-icon.svg.png" />
-            <span className="answer">TypeScript</span>
-            <span className="percent">50%</span>
-          </li>
-        </FlipMove>
+            <FlipMove className="answersList">
+              <li>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1200px-React-icon.svg.png" />
+                <span className="answer">TypeScript</span>
+                <span className="percent">50%</span>
+              </li>
+              <li className="active">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1200px-React-icon.svg.png" />
+                <span className="answer">TypeScript</span>
+                <span className="percent">50%</span>
+              </li>
+              <li>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1200px-React-icon.svg.png" />
+                <span className="answer">TypeScript</span>
+                <span className="percent">50%</span>
+              </li>
+            </FlipMove>
 
-        <button>Voltar</button>
+            <button>Voltar</button>
+          </>
+        )}
 
         {/* <Loading /> */}
       </div>
