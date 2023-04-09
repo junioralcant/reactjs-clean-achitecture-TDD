@@ -3,16 +3,28 @@ import {Footer} from '../../components/footer/footer';
 import {Loading} from '../../components/loading/loading';
 import './survey-result-styles.scss';
 import {Calendar} from '../../components/calendar/calendar';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {ILoadSurveyResult} from '../../../domain/useCases/load-survey-result';
 import {ErrorList} from '../../components/erro/error';
 
-export function SurveyResult() {
+type Props = {
+  loadSurveyResult: ILoadSurveyResult;
+};
+
+export function SurveyResult({loadSurveyResult}: Props) {
   const [state] = useState({
     isLoading: false,
     error: '',
     surveyResult: null as unknown as ILoadSurveyResult.Model,
   });
+
+  useEffect(() => {
+    async function loadSurvey() {
+      await loadSurveyResult.load();
+    }
+
+    loadSurvey();
+  }, []);
 
   return (
     <div className="surveyResult">
