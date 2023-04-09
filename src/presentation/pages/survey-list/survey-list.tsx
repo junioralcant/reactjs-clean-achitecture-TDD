@@ -4,7 +4,7 @@ import {Header} from '../../components/header/header';
 import {useEffect, useState, useContext} from 'react';
 import {CreateContextSurvey} from './components/contex/contex';
 import {ListItem} from './components/list/list';
-import {ErrorList} from './components/erro/error';
+import {ErrorList} from '../../components/erro/error';
 import {useErrorHandler} from '../../hooks/use-error-handler';
 import './survey-list-styles.scss';
 
@@ -37,6 +37,14 @@ export function SurveyList({loadSurveyList}: Props) {
     loadSurvey();
   }, [state.reload]);
 
+  function reload() {
+    setState({
+      surveys: [],
+      error: '',
+      reload: !state.reload,
+    });
+  }
+
   return (
     <div className="surveyList">
       <Header />
@@ -44,7 +52,11 @@ export function SurveyList({loadSurveyList}: Props) {
       <div className="contenWrap">
         <h2>Enquetes</h2>
         <CreateContextSurvey.Provider value={{state, setState}}>
-          {state.error ? <ErrorList /> : <ListItem />}
+          {state.error ? (
+            <ErrorList error={state.error} reload={reload} />
+          ) : (
+            <ListItem />
+          )}
         </CreateContextSurvey.Provider>
       </div>
 
