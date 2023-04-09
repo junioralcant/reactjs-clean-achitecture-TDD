@@ -5,8 +5,8 @@ type Props = React.HTMLAttributes<HTMLElement> & {
   isNegative?: boolean;
 };
 
-export function Spinner(props: Props) {
-  const negativeClass = props.isNegative ? 'negative' : '';
+export function Spinner({isNegative, ...props}: Props) {
+  const negativeClass = isNegative ? 'negative' : '';
   return (
     <div
       {...props}
