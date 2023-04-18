@@ -12,13 +12,13 @@ export function mockSurveyResultModel(): RemoteLoadSurveyResult.Model {
         answer: faker.random.words(),
         count: faker.datatype.number(),
         percent: faker.datatype.number(100),
-        isCurrentAccountAnswer: faker.datatype.boolean(),
+        isCurrentAccountAnswer: true,
       },
       {
         answer: faker.random.words(),
         count: faker.datatype.number(),
         percent: faker.datatype.number(100),
-        isCurrentAccountAnswer: faker.datatype.boolean(),
+        isCurrentAccountAnswer: false,
       },
     ],
   };
@@ -26,10 +26,10 @@ export function mockSurveyResultModel(): RemoteLoadSurveyResult.Model {
 
 export class LoadSurveyResultSpy implements ILoadSurveyResult {
   callsCount = 0;
-  surveys = mockSurveyResultModel();
+  surveyResult = mockSurveyResultModel();
 
   async load(): Promise<ILoadSurveyResult.Model | undefined> {
     this.callsCount++;
-    return this.surveys;
+    return this.surveyResult;
   }
 }
