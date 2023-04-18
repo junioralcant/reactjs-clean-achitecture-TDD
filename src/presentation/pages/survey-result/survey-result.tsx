@@ -1,9 +1,8 @@
-import FlipMove from 'react-flip-move';
+import {useEffect, useState} from 'react';
 import {Footer} from '../../components/footer/footer';
 import {Loading} from '../../components/loading/loading';
 import './survey-result-styles.scss';
 import {Calendar} from '../../components/calendar/calendar';
-import {useEffect, useState} from 'react';
 import {ILoadSurveyResult} from '../../../domain/useCases/load-survey-result';
 import {ErrorList} from '../../components/erro/error';
 
@@ -12,15 +11,17 @@ type Props = {
 };
 
 export function SurveyResult({loadSurveyResult}: Props) {
-  const [state] = useState({
+  const [state, setState] = useState({
     isLoading: false,
     error: '',
-    surveyResult: null as unknown as ILoadSurveyResult.Model,
+    surveyResult: undefined as ILoadSurveyResult.Model | undefined,
   });
 
   useEffect(() => {
     async function loadSurvey() {
-      await loadSurveyResult.load();
+      const surveyResult = await loadSurveyResult.load();
+
+      setState({...state, surveyResult});
     }
 
     loadSurvey();
@@ -34,27 +35,41 @@ export function SurveyResult({loadSurveyResult}: Props) {
         {state.surveyResult && (
           <>
             <hgroup>
-              <Calendar date={new Date()} className="calendarWrap" />
-              <h2>Qual sua linguagem favorita?</h2>
+              <Calendar
+                data-testid="calendar"
+                date={state.surveyResult.date}
+                className="calendarWrap"
+              />
+              <h2 data-testid="question">
+                {state.surveyResult.question}
+              </h2>
             </hgroup>
 
-            <FlipMove className="answersList">
-              <li>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1200px-React-icon.svg.png" />
-                <span className="answer">TypeScript</span>
-                <span className="percent">50%</span>
-              </li>
-              <li className="active">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1200px-React-icon.svg.png" />
-                <span className="answer">TypeScript</span>
-                <span className="percent">50%</span>
-              </li>
-              <li>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1200px-React-icon.svg.png" />
-                <span className="answer">TypeScript</span>
-                <span className="percent">50%</span>
-              </li>
-            </FlipMove>
+            <div data-testid="answers" className="answersList">
+              {state.surveyResult.answers.map((answer) => (
+                <li
+                  data-testid="answer-wrap"
+                  key={answer.answer}
+                  className={
+                    answer.isCurrentAccountAnswer ? 'active' : ''
+                  }
+                >
+                  {answer.image && (
+                    <img
+                      data-testid="image"
+                      src={answer.image}
+                      alt={answer.answer}
+                    />
+                  )}
+                  <span data-testid="answer" className="answer">
+                    {answer.answer}
+                  </span>
+                  <span data-testid="percent" className="percent">
+                    {answer.percent}%
+                  </span>
+                </li>
+              ))}
+            </div>
 
             <button>Voltar</button>
           </>
