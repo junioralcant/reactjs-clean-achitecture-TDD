@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react';
 import {Footer} from '../../components/footer/footer';
 import {Loading} from '../../components/loading/loading';
 import './survey-result-styles.scss';
+import {useErrorHandler} from '../../hooks/use-error-handler';
 import {Calendar} from '../../components/calendar/calendar';
 import {ILoadSurveyResult} from '../../../domain/useCases/load-survey-result';
 import {ErrorList} from '../../components/erro/error';
@@ -11,6 +12,14 @@ type Props = {
 };
 
 export function SurveyResult({loadSurveyResult}: Props) {
+  const handleErrorHook = useErrorHandler((error: Error) => {
+    setState({
+      ...state,
+      surveyResult: undefined,
+      error: error.message,
+    });
+  });
+
   const [state, setState] = useState({
     isLoading: false,
     error: '',
@@ -19,9 +28,13 @@ export function SurveyResult({loadSurveyResult}: Props) {
 
   useEffect(() => {
     async function loadSurvey() {
-      const surveyResult = await loadSurveyResult.load();
+      try {
+        const surveyResult = await loadSurveyResult.load();
 
-      setState({...state, surveyResult});
+        setState({...state, surveyResult});
+      } catch (error: any) {
+        handleErrorHook(error);
+      }
     }
 
     loadSurvey();
