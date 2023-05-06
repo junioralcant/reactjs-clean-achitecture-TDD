@@ -5,20 +5,26 @@ import {
   mockAccountModel,
   mockSurveyResultModel,
 } from '../../../domain/test';
-import {UnexpectedError} from '../../../domain/errors';
+import {
+  AccessDeniedError,
+  UnexpectedError,
+} from '../../../domain/errors';
 import {ApiContext} from '../../contexs/api/api-context';
+import {AccountModel} from '../../../domain/models';
 
 type SutTypes = {
   loadSurveyResultSpy: LoadSurveyResultSpy;
+  setCurrentAccountMock: (account: AccountModel) => void;
 };
 
 function makeSut(
   loadSurveyResultSpy = new LoadSurveyResultSpy()
 ): SutTypes {
+  const setCurrentAccountMock = jest.fn();
   render(
     <ApiContext.Provider
       value={{
-        setCurrentAccount: jest.fn(),
+        setCurrentAccount: setCurrentAccountMock,
         getCurrentAccount: () => mockAccountModel(),
       }}
     >
@@ -28,6 +34,7 @@ function makeSut(
 
   return {
     loadSurveyResultSpy,
+    setCurrentAccountMock,
   };
 }
 
@@ -121,5 +128,21 @@ describe('SurveyResult Component', () => {
     expect(screen.getByTestId('error')).toHaveTextContent(
       error.message
     );
+  });
+
+  it('Should render error on AccessDeniedError', async () => {
+    const loadSurveyResultSpy = new LoadSurveyResultSpy();
+    const error = new AccessDeniedError();
+
+    jest
+      .spyOn(loadSurveyResultSpy, 'load')
+      .mockRejectedValueOnce(error);
+
+    const {setCurrentAccountMock} = makeSut(loadSurveyResultSpy);
+
+    await waitFor(() => screen.getByTestId('survey-result'));
+
+    expect(setCurrentAccountMock).toHaveBeenCalledWith(undefined);
+    expect(mockedUsedNavigate).toHaveBeenCalledWith('/login');
   });
 });
