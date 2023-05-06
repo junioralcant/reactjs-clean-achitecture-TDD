@@ -1,4 +1,9 @@
-import {render, screen, waitFor} from '@testing-library/react';
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react';
 import {SurveyResult} from './survey-result';
 import {
   LoadSurveyResultSpy,
@@ -144,5 +149,22 @@ describe('SurveyResult Component', () => {
 
     expect(setCurrentAccountMock).toHaveBeenCalledWith(undefined);
     expect(mockedUsedNavigate).toHaveBeenCalledWith('/login');
+  });
+
+  it('Should call LoadSurveyResult on reload', async () => {
+    const loadSurveyResultSpy = new LoadSurveyResultSpy();
+    const error = new UnexpectedError();
+
+    jest
+      .spyOn(loadSurveyResultSpy, 'load')
+      .mockRejectedValueOnce(error);
+
+    makeSut(loadSurveyResultSpy);
+
+    await waitFor(() => screen.getByTestId('error'));
+
+    fireEvent.click(screen.getByTestId('reload'));
+    expect(loadSurveyResultSpy.callsCount).toBe(1);
+    await waitFor(() => screen.getByTestId('survey-result'));
   });
 });
