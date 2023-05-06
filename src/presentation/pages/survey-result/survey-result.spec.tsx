@@ -2,22 +2,40 @@ import {render, screen, waitFor} from '@testing-library/react';
 import {SurveyResult} from './survey-result';
 import {
   LoadSurveyResultSpy,
+  mockAccountModel,
   mockSurveyResultModel,
 } from '../../../domain/test';
+import {UnexpectedError} from '../../../domain/errors';
+import {ApiContext} from '../../contexs/api/api-context';
 
 type SutTypes = {
   loadSurveyResultSpy: LoadSurveyResultSpy;
 };
 
-function makeSut(surveyResult = mockSurveyResultModel()): SutTypes {
-  const loadSurveyResultSpy = new LoadSurveyResultSpy();
-  loadSurveyResultSpy.surveyResult = surveyResult;
-  render(<SurveyResult loadSurveyResult={loadSurveyResultSpy} />);
+function makeSut(
+  loadSurveyResultSpy = new LoadSurveyResultSpy()
+): SutTypes {
+  render(
+    <ApiContext.Provider
+      value={{
+        setCurrentAccount: jest.fn(),
+        getCurrentAccount: () => mockAccountModel(),
+      }}
+    >
+      <SurveyResult loadSurveyResult={loadSurveyResultSpy} />
+    </ApiContext.Provider>
+  );
 
   return {
     loadSurveyResultSpy,
   };
 }
+
+const mockedUsedNavigate = jest.fn();
+jest.mock('react-router-dom', () => ({
+  ...(jest.requireActual('react-router-dom') as any),
+  useNavigate: () => mockedUsedNavigate,
+}));
 
 describe('SurveyResult Component', () => {
   it('Should present correct initial state', async () => {
@@ -36,11 +54,15 @@ describe('SurveyResult Component', () => {
   });
 
   it('Should present SurveyResult data on success', async () => {
+    const loadSurveyResultSpy = new LoadSurveyResultSpy();
+
     const surveyResult = Object.assign(mockSurveyResultModel(), {
       date: new Date('2022-12-30T00:00:00'),
     });
 
-    makeSut(surveyResult);
+    loadSurveyResultSpy.surveyResult = surveyResult;
+
+    makeSut(loadSurveyResultSpy);
 
     await waitFor(() => screen.getByTestId('day'));
     expect(screen.getByTestId('day')).toHaveTextContent('30');
@@ -80,6 +102,24 @@ describe('SurveyResult Component', () => {
     );
     expect(percents[1]).toHaveTextContent(
       `${surveyResult.answers[1].percent}%`
+    );
+  });
+
+  it('Should render error on UnexpectedError', async () => {
+    const loadSurveyResultSpy = new LoadSurveyResultSpy();
+    const error = new UnexpectedError();
+
+    jest
+      .spyOn(loadSurveyResultSpy, 'load')
+      .mockRejectedValueOnce(error);
+    makeSut(loadSurveyResultSpy);
+
+    await waitFor(() => screen.getByTestId('error'));
+
+    expect(screen.queryByTestId('question')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('loading')).not.toBeInTheDocument();
+    expect(screen.getByTestId('error')).toHaveTextContent(
+      error.message
     );
   });
 });
