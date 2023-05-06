@@ -24,6 +24,7 @@ export function SurveyResult({loadSurveyResult}: Props) {
     isLoading: false,
     error: '',
     surveyResult: undefined as ILoadSurveyResult.Model | undefined,
+    reload: false,
   });
 
   useEffect(() => {
@@ -38,7 +39,16 @@ export function SurveyResult({loadSurveyResult}: Props) {
     }
 
     loadSurvey();
-  }, []);
+  }, [state.reload]);
+
+  function reload() {
+    setState({
+      isLoading: false,
+      surveyResult: undefined,
+      error: '',
+      reload: !state.reload,
+    });
+  }
 
   return (
     <div className="surveyResult">
@@ -90,7 +100,7 @@ export function SurveyResult({loadSurveyResult}: Props) {
 
         {state.isLoading && <Loading />}
         {state.error && (
-          <ErrorList error={state.error} reload={() => {}} />
+          <ErrorList error={state.error} reload={reload} />
         )}
       </div>
       <Footer />
