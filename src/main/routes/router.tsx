@@ -30,7 +30,7 @@ export function Router() {
               </PrivateRouter>
             }
           />
-          <Route path="/surveys" element={<SurveyResult />} />
+          <Route path="/surveys/:id" element={<SurveyResult />} />
         </Routes>
       </BrowserRouter>
     </ApiContext.Provider>

@@ -6,6 +6,7 @@ import {useErrorHandler} from '../../hooks/use-error-handler';
 import {Calendar} from '../../components/calendar/calendar';
 import {ILoadSurveyResult} from '../../../domain/useCases/load-survey-result';
 import {ErrorList} from '../../components/erro/error';
+import {Header} from '../../components/header/header';
 
 type Props = {
   loadSurveyResult: ILoadSurveyResult;
@@ -52,7 +53,7 @@ export function SurveyResult({loadSurveyResult}: Props) {
 
   return (
     <div className="surveyResult">
-      {/* <Header /> */}
+      <Header />
 
       <div data-testid="survey-result" className="contenWrap">
         {state.surveyResult && (
