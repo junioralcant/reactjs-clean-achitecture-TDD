@@ -1,12 +1,12 @@
 import {SurveyResultModel} from '../models/';
 
-export interface ISurveyResult {
-  load(
-    params: ISurveyResult.Params
-  ): Promise<ISurveyResult.Model | undefined>;
+export interface ISaveSurveyResult {
+  save(
+    params: ISaveSurveyResult.Params
+  ): Promise<ISaveSurveyResult.Model | undefined>;
 }
 
-export namespace ISurveyResult {
+export namespace ISaveSurveyResult {
   export type Params = {
     answers: string;
   };
