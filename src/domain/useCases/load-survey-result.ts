@@ -1,17 +1,9 @@
+import {SurveyResultModel} from '../models';
+
 export interface ILoadSurveyResult {
   load(): Promise<ILoadSurveyResult.Model | undefined>;
 }
 
 export namespace ILoadSurveyResult {
-  export type Model = {
-    question: string;
-    date: Date;
-    answers: Array<{
-      image?: string;
-      answer: string;
-      count: number;
-      percent: number;
-      isCurrentAccountAnswer: boolean;
-    }>;
-  };
+  export type Model = SurveyResultModel;
 }
