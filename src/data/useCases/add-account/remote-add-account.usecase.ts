@@ -3,17 +3,18 @@ import {
   UnexpectedError,
 } from '../../../domain/errors';
 import {IAddAccount} from '../../../domain/useCases';
-import {HttpStatusCode, IHttpPostClient} from '../../protocols/http';
+import {HttpStatusCode, IHttpClient} from '../../protocols/http';
 
 export class RemoteAddAccount implements IAddAccount {
   constructor(
     private readonly url: string,
-    private readonly httpPostClient: IHttpPostClient<RemoteAddAccount.Model>
+    private readonly httpClient: IHttpClient<RemoteAddAccount.Model>
   ) {}
 
   async add(params: IAddAccount.Params): Promise<IAddAccount.Model> {
-    const response = await this.httpPostClient.post({
+    const response = await this.httpClient.request({
       url: this.url,
+      method: 'post',
       body: params,
     });
 

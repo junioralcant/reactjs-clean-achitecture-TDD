@@ -1,18 +1,21 @@
 import {UnexpectedError} from '../../../domain/errors';
 import {AccessDeniedError} from '../../../domain/errors/access-denied-error';
 import {ILoadSurveyList} from '../../../domain/useCases';
-import {HttpStatusCode, IHttpGetClient} from '../../protocols/http';
+import {HttpStatusCode, IHttpClient} from '../../protocols/http';
 
 export class RemoteLoadSurveyList implements ILoadSurveyList {
   constructor(
     private readonly url: string,
-    private readonly httpGetClient: IHttpGetClient<
+    private readonly httpGetClient: IHttpClient<
       RemoteLoadSurveyList.Model[]
     >
   ) {}
 
   async loadAll(): Promise<ILoadSurveyList.Model[] | undefined> {
-    const response = await this.httpGetClient.get({url: this.url});
+    const response = await this.httpGetClient.request({
+      url: this.url,
+      method: 'get',
+    });
     switch (response.statusCode) {
       case HttpStatusCode.ok:
         return response.body;

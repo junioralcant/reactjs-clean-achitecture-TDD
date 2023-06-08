@@ -1,12 +1,12 @@
 import {InvalidCredentilsError} from '../../../domain/errors';
 import {UnexpectedError} from '../../../domain/errors';
 import {IAuthentication} from '../../../domain/useCases';
-import {IHttpPostClient, HttpStatusCode} from '../../protocols/http';
+import {IHttpClient, HttpStatusCode} from '../../protocols/http';
 
 export class RemoteAuthentication implements IAuthentication {
   constructor(
     private readonly url: string,
-    private readonly httpPosClient: IHttpPostClient<RemoteAuthentication.Model>
+    private readonly httpPosClient: IHttpClient<RemoteAuthentication.Model>
   ) {}
 
   async auth({
@@ -15,8 +15,9 @@ export class RemoteAuthentication implements IAuthentication {
   }: IAuthentication.Params): Promise<
     IAuthentication.Model | undefined
   > {
-    const response = await this.httpPosClient.post({
+    const response = await this.httpPosClient.request({
       url: this.url,
+      method: 'post',
       body: {email, password},
     });
 
