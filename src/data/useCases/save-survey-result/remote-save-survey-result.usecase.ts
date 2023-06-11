@@ -1,5 +1,9 @@
-import {IHttpClient} from '../../protocols/http';
+import {HttpStatusCode, IHttpClient} from '../../protocols/http';
 import {ISaveSurveyResult} from '../../../domain/useCases';
+import {
+  AccessDeniedError,
+  UnexpectedError,
+} from '../../../domain/errors';
 
 export class RemoteSaveSurveyResult implements ISaveSurveyResult {
   constructor(
@@ -10,13 +14,18 @@ export class RemoteSaveSurveyResult implements ISaveSurveyResult {
   async save(
     params: ISaveSurveyResult.Params
   ): Promise<ISaveSurveyResult.Model | undefined> {
-    await this.httpGetClient.request({
+    const httpResponse = await this.httpGetClient.request({
       url: this.url,
       method: 'put',
       body: params,
     });
 
-    return undefined;
+    switch (httpResponse.statusCode) {
+      case HttpStatusCode.forbidden:
+        throw new AccessDeniedError();
+      default:
+        return undefined;
+    }
   }
 }
 
