@@ -21,10 +21,12 @@ export class RemoteSaveSurveyResult implements ISaveSurveyResult {
     });
 
     switch (httpResponse.statusCode) {
+      case HttpStatusCode.ok:
+        return undefined;
       case HttpStatusCode.forbidden:
         throw new AccessDeniedError();
       default:
-        return undefined;
+        throw new UnexpectedError();
     }
   }
 }
