@@ -1,7 +1,10 @@
 import {faker} from '@faker-js/faker';
 import {HttpClientSpy} from '../../test';
 import {RemoteSaveSurveyResult} from './remote-save-survey-result.usecase';
-import {mockSaveResultParams} from '../../../domain/test';
+import {
+  mockSaveResultParams,
+  mockSurveyResultModel,
+} from '../../../domain/test';
 import {HttpStatusCode} from '../../protocols/http';
 import {
   AccessDeniedError,
@@ -66,5 +69,17 @@ describe('RemoteSaveSurveyResult', () => {
 
     const promise = sut.save(mockSaveResultParams());
     await expect(promise).rejects.toThrow(new UnexpectedError());
+  });
+
+  it('Should return a SurveyResult on status 200', async () => {
+    const {sut, httpClientSpy} = makeSut();
+    const httpResult = mockSurveyResultModel();
+    httpClientSpy.response = {
+      statusCode: HttpStatusCode.ok,
+      body: httpResult,
+    };
+
+    const response = await sut.save(mockSaveResultParams());
+    expect(response).toEqual(httpResult);
   });
 });
