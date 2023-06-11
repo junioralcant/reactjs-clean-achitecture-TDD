@@ -2,6 +2,8 @@ import {faker} from '@faker-js/faker';
 import {HttpClientSpy} from '../../test';
 import {RemoteSaveSurveyResult} from './remote-save-survey-result.usecase';
 import {mockSaveResultParams} from '../../../domain/test';
+import {HttpStatusCode} from '../../protocols/http';
+import {AccessDeniedError} from '../../../domain/errors';
 
 type SutTypes = {
   sut: RemoteSaveSurveyResult;
@@ -28,5 +30,16 @@ describe('RemoteSaveSurveyResult', () => {
     expect(httpClientSpy.url).toBe(url);
     expect(httpClientSpy.method).toBe('put');
     expect(httpClientSpy.body).toBe(saveSurveyResultParams);
+  });
+
+  it('Should throw AccessDeniedError if HttpClient return 403', async () => {
+    const {sut, httpClientSpy} = makeSut();
+
+    httpClientSpy.response = {
+      statusCode: HttpStatusCode.forbidden,
+    };
+
+    const promise = sut.save(mockSaveResultParams());
+    await expect(promise).rejects.toThrow(new AccessDeniedError());
   });
 });
