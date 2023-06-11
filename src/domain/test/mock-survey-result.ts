@@ -1,6 +1,13 @@
 import {faker} from '@faker-js/faker';
 import {RemoteLoadSurveyResult} from '../../data/useCases/load-survey-result/load-survey-result';
 import {ILoadSurveyResult} from '../useCases/load-survey-result';
+import {ISaveSurveyResult} from '../useCases';
+
+export function mockSaveResultParams(): ISaveSurveyResult.Params {
+  return {
+    answers: faker.random.words(),
+  };
+}
 
 export function mockSurveyResultModel(): RemoteLoadSurveyResult.Model {
   return {

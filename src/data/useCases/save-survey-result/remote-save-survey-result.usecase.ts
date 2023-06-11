@@ -13,6 +13,7 @@ export class RemoteSaveSurveyResult implements ISaveSurveyResult {
     await this.httpGetClient.request({
       url: this.url,
       method: 'put',
+      body: params,
     });
 
     return undefined;
