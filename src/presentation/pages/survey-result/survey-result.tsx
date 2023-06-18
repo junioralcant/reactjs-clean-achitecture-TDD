@@ -24,6 +24,7 @@ export function SurveyResult({
     setState({
       ...state,
       surveyResult: undefined,
+      isLoading: false,
       error: error.message,
     });
   });
@@ -58,16 +59,20 @@ export function SurveyResult({
     });
   }
 
-  function answerClick(
+  async function answerClick(
     event: React.MouseEvent<HTMLLIElement, MouseEvent>,
     answer: string
-  ): void {
+  ): Promise<void> {
     if (event.currentTarget.classList.contains('active')) {
       return;
     }
 
-    setState((old) => ({...old, isLoading: true}));
-    saveSurveyResult.save({answers: answer});
+    try {
+      setState((old) => ({...old, isLoading: true}));
+      await saveSurveyResult.save({answers: answer});
+    } catch (error: any) {
+      handleErrorHook(error);
+    }
   }
 
   return (
