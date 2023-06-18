@@ -203,7 +203,7 @@ describe('SurveyResult Component', () => {
     });
   });
 
-  it('Should render error on UnexpectedError', async () => {
+  it('Should render error on UnexpectedError on SaveSurveyResult', async () => {
     const saveSurveyResultSpy = new SaveSurveyResultSpy();
     const error = new UnexpectedError();
 
@@ -215,7 +215,6 @@ describe('SurveyResult Component', () => {
     await waitFor(() => screen.getByTestId('answers'));
 
     const answersWrap = screen.queryAllByTestId('answer-wrap');
-
     fireEvent.click(answersWrap[1]);
 
     await waitFor(() => screen.getByTestId('error'));
@@ -224,5 +223,25 @@ describe('SurveyResult Component', () => {
     expect(screen.getByTestId('error')).toHaveTextContent(
       error.message
     );
+  });
+
+  it('Should render error on AccessDeniedError on SaveSurveyResult', async () => {
+    const saveSurveyResultSpy = new SaveSurveyResultSpy();
+    const error = new AccessDeniedError();
+
+    jest
+      .spyOn(saveSurveyResultSpy, 'save')
+      .mockRejectedValueOnce(error);
+
+    const {setCurrentAccountMock} = makeSut({saveSurveyResultSpy});
+
+    await waitFor(() => screen.getByTestId('answers'));
+
+    const answersWrap = screen.queryAllByTestId('answer-wrap');
+    fireEvent.click(answersWrap[1]);
+
+    await waitFor(() => screen.getByTestId('answers'));
+    expect(setCurrentAccountMock).toHaveBeenCalledWith(undefined);
+    expect(mockedUsedNavigate).toHaveBeenCalledWith('/login');
   });
 });
