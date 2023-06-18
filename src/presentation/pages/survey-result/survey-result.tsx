@@ -2,17 +2,24 @@ import {useEffect, useState} from 'react';
 import {Footer} from '../../components/footer/footer';
 import {Loading} from '../../components/loading/loading';
 import './survey-result-styles.scss';
+import {
+  ISaveSurveyResult,
+  ILoadSurveyResult,
+} from '../../../domain/useCases';
 import {useErrorHandler} from '../../hooks/use-error-handler';
 import {Calendar} from '../../components/calendar/calendar';
-import {ILoadSurveyResult} from '../../../domain/useCases/load-survey-result';
 import {ErrorList} from '../../components/erro/error';
 import {Header} from '../../components/header/header';
 
 type Props = {
   loadSurveyResult: ILoadSurveyResult;
+  saveSurveyResult: ISaveSurveyResult;
 };
 
-export function SurveyResult({loadSurveyResult}: Props) {
+export function SurveyResult({
+  loadSurveyResult,
+  saveSurveyResult,
+}: Props) {
   const handleErrorHook = useErrorHandler((error: Error) => {
     setState({
       ...state,
@@ -51,6 +58,18 @@ export function SurveyResult({loadSurveyResult}: Props) {
     });
   }
 
+  function answerClick(
+    event: React.MouseEvent<HTMLLIElement, MouseEvent>,
+    answer: string
+  ): void {
+    if (event.currentTarget.classList.contains('active')) {
+      return;
+    }
+
+    setState((old) => ({...old, isLoading: true}));
+    saveSurveyResult.save({answers: answer});
+  }
+
   return (
     <div className="surveyResult">
       <Header />
@@ -77,6 +96,7 @@ export function SurveyResult({loadSurveyResult}: Props) {
                   className={
                     answer.isCurrentAccountAnswer ? 'active' : ''
                   }
+                  onClick={(e) => answerClick(e, answer.answer)}
                 >
                   {answer.image && (
                     <img
