@@ -202,4 +202,27 @@ describe('SurveyResult Component', () => {
       answers: loadSurveyResultSpy.surveyResult.answers[1].answer,
     });
   });
+
+  it('Should render error on UnexpectedError', async () => {
+    const saveSurveyResultSpy = new SaveSurveyResultSpy();
+    const error = new UnexpectedError();
+
+    jest
+      .spyOn(saveSurveyResultSpy, 'save')
+      .mockRejectedValueOnce(error);
+    makeSut({saveSurveyResultSpy});
+
+    await waitFor(() => screen.getByTestId('answers'));
+
+    const answersWrap = screen.queryAllByTestId('answer-wrap');
+
+    fireEvent.click(answersWrap[1]);
+
+    await waitFor(() => screen.getByTestId('error'));
+    expect(screen.queryByTestId('question')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('loading')).not.toBeInTheDocument();
+    expect(screen.getByTestId('error')).toHaveTextContent(
+      error.message
+    );
+  });
 });
