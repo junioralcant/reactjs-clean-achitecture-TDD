@@ -10,6 +10,7 @@ import {
   SaveSurveyResultSpy,
   mockAccountModel,
   mockSurveyResultModel,
+  mockSurveyResultModelSave,
 } from '../../../domain/test';
 import {
   AccessDeniedError,
@@ -176,6 +177,7 @@ describe('SurveyResult Component', () => {
     await waitFor(() => screen.getByTestId('error'));
 
     fireEvent.click(screen.getByTestId('reload'));
+
     expect(loadSurveyResultSpy.callsCount).toBe(1);
     await waitFor(() => screen.getByTestId('survey-result'));
   });
@@ -197,13 +199,15 @@ describe('SurveyResult Component', () => {
 
     const answersWrap = screen.queryAllByTestId('answer-wrap');
     fireEvent.click(answersWrap[1]);
+
+    await waitFor(() => screen.getByTestId('answers'));
     expect(screen.queryByTestId('loading')).toBeInTheDocument();
     expect(saveSurveyResultSpy.params).toEqual({
       answers: loadSurveyResultSpy.surveyResult.answers[1].answer,
     });
   });
 
-  it('Should render error on UnexpectedError on SaveSurveyResult', async () => {
+  it('Should render error on SaveSurveyResult UnexpectedError', async () => {
     const saveSurveyResultSpy = new SaveSurveyResultSpy();
     const error = new UnexpectedError();
 
@@ -225,7 +229,7 @@ describe('SurveyResult Component', () => {
     );
   });
 
-  it('Should render error on AccessDeniedError on SaveSurveyResult', async () => {
+  it('Should render error on SaveSurveyResult AccessDeniedError', async () => {
     const saveSurveyResultSpy = new SaveSurveyResultSpy();
     const error = new AccessDeniedError();
 
@@ -243,5 +247,66 @@ describe('SurveyResult Component', () => {
     await waitFor(() => screen.getByTestId('answers'));
     expect(setCurrentAccountMock).toHaveBeenCalledWith(undefined);
     expect(mockedUsedNavigate).toHaveBeenCalledWith('/login');
+  });
+
+  it('Should present SurveyResult data on SaveSurveyResult success', async () => {
+    const saveSurveyResultSpy = new SaveSurveyResultSpy();
+
+    const surveyResult = Object.assign(mockSurveyResultModelSave(), {
+      date: new Date('2023-06-18T00:00:00'),
+    });
+
+    saveSurveyResultSpy.surveyResult = surveyResult;
+
+    makeSut({saveSurveyResultSpy: saveSurveyResultSpy});
+
+    await waitFor(() => screen.getByTestId('answers'));
+
+    const answersWrap = screen.queryAllByTestId('answer-wrap');
+    fireEvent.click(answersWrap[1]);
+
+    await waitFor(() => screen.getByTestId('answers'));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('day')).toHaveTextContent('18');
+      expect(screen.getByTestId('month')).toHaveTextContent('jun');
+      expect(screen.getByTestId('year')).toHaveTextContent('2023');
+      expect(screen.getByTestId('question')).toHaveTextContent(
+        surveyResult.question
+      );
+
+      expect(screen.getByTestId('answers').childElementCount).toBe(2);
+
+      expect(answersWrap[0]).toHaveClass('active');
+      expect(answersWrap[1]).not.toHaveClass('active');
+
+      const images = screen.queryAllByTestId('image');
+      expect(images[0]).toHaveAttribute(
+        'src',
+        surveyResult.answers[0].image
+      );
+      expect(images[0]).toHaveAttribute(
+        'alt',
+        surveyResult.answers[0].answer
+      );
+      expect(images[1]).toBeFalsy();
+
+      const answers = screen.queryAllByTestId('answer');
+      expect(answers[0]).toHaveTextContent(
+        surveyResult.answers[0].answer
+      );
+      expect(answers[1]).toHaveTextContent(
+        surveyResult.answers[1].answer
+      );
+
+      const percents = screen.queryAllByTestId('percent');
+      expect(percents[0]).toHaveTextContent(
+        `${surveyResult.answers[0].percent}%`
+      );
+      expect(percents[1]).toHaveTextContent(
+        `${surveyResult.answers[1].percent}%`
+      );
+      expect(screen.queryByTestId('loading')).not.toBeInTheDocument();
+    });
   });
 });
