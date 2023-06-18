@@ -69,7 +69,12 @@ export function SurveyResult({
 
     try {
       setState((old) => ({...old, isLoading: true}));
-      await saveSurveyResult.save({answers: answer});
+
+      const surveyResult = await saveSurveyResult.save({
+        answers: answer,
+      });
+
+      setState((old) => ({...old, surveyResult, isLoading: false}));
     } catch (error: any) {
       handleErrorHook(error);
     }
