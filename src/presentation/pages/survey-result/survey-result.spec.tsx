@@ -7,6 +7,7 @@ import {
 import {SurveyResult} from './survey-result';
 import {
   LoadSurveyResultSpy,
+  SaveSurveyResultSpy,
   mockAccountModel,
   mockSurveyResultModel,
 } from '../../../domain/test';
@@ -19,12 +20,19 @@ import {AccountModel} from '../../../domain/models';
 
 type SutTypes = {
   loadSurveyResultSpy: LoadSurveyResultSpy;
+  saveSurveyResultSpy: SaveSurveyResultSpy;
   setCurrentAccountMock: (account: AccountModel) => void;
 };
 
-function makeSut(
-  loadSurveyResultSpy = new LoadSurveyResultSpy()
-): SutTypes {
+type SutParams = {
+  loadSurveyResultSpy?: LoadSurveyResultSpy;
+  saveSurveyResultSpy?: SaveSurveyResultSpy;
+};
+
+function makeSut({
+  loadSurveyResultSpy = new LoadSurveyResultSpy(),
+  saveSurveyResultSpy = new SaveSurveyResultSpy(),
+}: SutParams = {}): SutTypes {
   const setCurrentAccountMock = jest.fn();
   render(
     <ApiContext.Provider
@@ -33,12 +41,16 @@ function makeSut(
         getCurrentAccount: () => mockAccountModel(),
       }}
     >
-      <SurveyResult loadSurveyResult={loadSurveyResultSpy} />
+      <SurveyResult
+        loadSurveyResult={loadSurveyResultSpy}
+        saveSurveyResult={saveSurveyResultSpy}
+      />
     </ApiContext.Provider>
   );
 
   return {
     loadSurveyResultSpy,
+    saveSurveyResultSpy,
     setCurrentAccountMock,
   };
 }
@@ -74,7 +86,7 @@ describe('SurveyResult Component', () => {
 
     loadSurveyResultSpy.surveyResult = surveyResult;
 
-    makeSut(loadSurveyResultSpy);
+    makeSut({loadSurveyResultSpy});
 
     await waitFor(() => screen.getByTestId('day'));
     expect(screen.getByTestId('day')).toHaveTextContent('30');
@@ -124,7 +136,7 @@ describe('SurveyResult Component', () => {
     jest
       .spyOn(loadSurveyResultSpy, 'load')
       .mockRejectedValueOnce(error);
-    makeSut(loadSurveyResultSpy);
+    makeSut({loadSurveyResultSpy});
 
     await waitFor(() => screen.getByTestId('error'));
 
@@ -143,7 +155,7 @@ describe('SurveyResult Component', () => {
       .spyOn(loadSurveyResultSpy, 'load')
       .mockRejectedValueOnce(error);
 
-    const {setCurrentAccountMock} = makeSut(loadSurveyResultSpy);
+    const {setCurrentAccountMock} = makeSut({loadSurveyResultSpy});
 
     await waitFor(() => screen.getByTestId('survey-result'));
 
@@ -159,7 +171,7 @@ describe('SurveyResult Component', () => {
       .spyOn(loadSurveyResultSpy, 'load')
       .mockRejectedValueOnce(error);
 
-    makeSut(loadSurveyResultSpy);
+    makeSut({loadSurveyResultSpy});
 
     await waitFor(() => screen.getByTestId('error'));
 
@@ -176,5 +188,18 @@ describe('SurveyResult Component', () => {
     const answersWrap = screen.queryAllByTestId('answer-wrap');
     fireEvent.click(answersWrap[0]);
     expect(screen.queryByTestId('loading')).not.toBeInTheDocument();
+  });
+
+  it('Should call SaveSurveyResult on non active answer click', async () => {
+    const {saveSurveyResultSpy, loadSurveyResultSpy} = makeSut();
+
+    await waitFor(() => screen.getByTestId('answers'));
+
+    const answersWrap = screen.queryAllByTestId('answer-wrap');
+    fireEvent.click(answersWrap[1]);
+    expect(screen.queryByTestId('loading')).toBeInTheDocument();
+    expect(saveSurveyResultSpy.params).toEqual({
+      answers: loadSurveyResultSpy.surveyResult.answers[1].answer,
+    });
   });
 });

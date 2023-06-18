@@ -40,3 +40,17 @@ export class LoadSurveyResultSpy implements ILoadSurveyResult {
     return this.surveyResult;
   }
 }
+
+export class SaveSurveyResultSpy implements ISaveSurveyResult {
+  params: ISaveSurveyResult.Params = {
+    answers: '',
+  };
+  surveyResult = mockSurveyResultModel();
+
+  async save(
+    params: ISaveSurveyResult.Params
+  ): Promise<ISaveSurveyResult.Model | undefined> {
+    this.params = params;
+    return this.surveyResult;
+  }
+}
