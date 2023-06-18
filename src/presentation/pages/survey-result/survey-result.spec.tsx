@@ -167,4 +167,14 @@ describe('SurveyResult Component', () => {
     expect(loadSurveyResultSpy.callsCount).toBe(1);
     await waitFor(() => screen.getByTestId('survey-result'));
   });
+
+  it('Should not present Loading on active answer click', async () => {
+    makeSut();
+
+    await waitFor(() => screen.getByTestId('answers'));
+
+    const answersWrap = screen.queryAllByTestId('answer-wrap');
+    fireEvent.click(answersWrap[0]);
+    expect(screen.queryByTestId('loading')).not.toBeInTheDocument();
+  });
 });
